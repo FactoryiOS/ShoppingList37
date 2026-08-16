@@ -7,7 +7,7 @@ import SwiftUI
 
 struct ShoppingListPlaceholderView: View {
     
-    let placeholderImage = "Images/img_empty_items"
+    private let placeholderImage = "Images/img_empty_items"
     
     var body: some View {
         VStack {

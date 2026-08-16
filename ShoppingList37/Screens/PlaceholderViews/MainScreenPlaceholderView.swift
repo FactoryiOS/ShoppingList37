@@ -7,7 +7,7 @@ import SwiftUI
 
 struct MainScreenPlaceholderView: View {
     
-    let placeholderImage = "Images/img_empty_lists"
+    private let placeholderImage = "Images/img_empty_lists"
     
     var body: some View {
         VStack {
