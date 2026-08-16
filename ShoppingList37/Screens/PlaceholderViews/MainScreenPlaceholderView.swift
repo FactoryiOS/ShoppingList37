@@ -19,6 +19,7 @@ struct MainScreenPlaceholderView: View {
                 .padding(.top, 28)
             Text("Создайте свой первый список")
                 .font(.body)
+                .padding(.top, 4)
         }
         .padding(.horizontal, 16)
     }
