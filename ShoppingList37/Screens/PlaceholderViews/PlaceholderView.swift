@@ -5,6 +5,29 @@
 
 import SwiftUI
 
+// MARK: - Placeholder View
+
+struct PlaceholderView: View {
+    
+    let state: EmptyStateData
+    
+    var body: some View {
+        VStack {
+            Image(state.imageResource)
+                .resizable()
+                .scaledToFit()
+                .padding(.horizontal, state.imageHorizontalPadding)
+            Text(state.title)
+                .font(.system(size: 20, weight: .semibold))
+                .padding(.top, 28)
+            Text(state.subtitle)
+                .font(.body)
+                .padding(.top, 4)
+        }
+        .padding(.horizontal, 16)
+    }
+}
+
 // MARK: - Empty State Data
 
 enum EmptyStateData {
@@ -36,38 +59,20 @@ enum EmptyStateData {
         }
     }
         
-    var imageSize: CGFloat {
+    var imageHorizontalPadding: CGFloat {
         switch self {
         case .shoppingList:
-            return 343
+            return 16
         case .mainScreen:
-            return 277
+            return 49
         }
     }
 }
 
-// MARK: - Placeholder View
-
-struct PlaceholderView: View {
-    
-    let state: EmptyStateData
-    
-    var body: some View {
-        VStack {
-            Image(state.imageResource)
-                .resizable()
-                .frame(width: state.imageSize, height: state.imageSize)
-            Text(state.title)
-                .font(.system(size: 20, weight: .semibold))
-                .padding(.top, 28)
-            Text(state.subtitle)
-                .font(.body)
-                .padding(.top, 4)
-        }
-        .padding(.horizontal, 16)
-    }
+#Preview("Main Screen") {
+    PlaceholderView(state: .mainScreen)
 }
 
-#Preview {
+#Preview("Shopping List") {
     PlaceholderView(state: .shoppingList)
 }
