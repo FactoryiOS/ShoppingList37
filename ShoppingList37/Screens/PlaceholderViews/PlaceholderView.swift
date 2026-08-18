@@ -14,9 +14,9 @@ enum EmptyStateData {
     var imageResource: ImageResource {
         switch self {
         case .shoppingList:
-            return ImageResource.init(name: "Images/img_empty_items", bundle: .main)
+            return .Images.imgEmptyItems
         case .mainScreen:
-            return ImageResource.init(name: "Images/img_empty_lists", bundle: .main)
+            return .Images.imgEmptyLists
         }
     }
     
