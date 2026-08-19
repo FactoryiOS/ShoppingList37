@@ -22,11 +22,12 @@ struct ContentView: View {
             VStack {
                 InsertTextField(
                     insertString: $productName,
-                    isError: $isError,
+                    isSearchGlyph: false,
+                    isError: isError,
                     placeholder: placeholder,
                     subtitle: subtitleTextField
                 )
-                .onChange(of: productName) { oldValue, newValue in
+                .onChange(of: productName) { _, newValue in
                     isError = newValue == "Test"
                 }
 
@@ -34,7 +35,6 @@ struct ContentView: View {
                 
                 BaseButton(title: titleButton, isActive: !productName.isEmpty && !isError) { }
             }
-            .padding()
         }
     }
 }

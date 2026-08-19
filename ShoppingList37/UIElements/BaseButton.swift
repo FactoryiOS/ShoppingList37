@@ -20,19 +20,20 @@ struct BaseButton: View {
                 action()
             } label: {
                 Text(title)
+                    .frame(maxWidth: .infinity)
                     .font(.system(size: 17, weight: .medium))
-                    .frame(width: 303, height: 22)
             }
-            .padding()
-            .frame(idealWidth: 343, maxWidth: .infinity, maxHeight: 44)
-            .background(isActive ? .accent : Color.Colors.buttonDisabled)
-            .foregroundStyle(isActive ? .white : Color.Colors.textInactive)
+            .padding(.horizontal, 16)
+            .frame(maxWidth: .infinity, maxHeight: 44)
+            .background(isActive ? .accent : .Colors.buttonDisabled)
+            .foregroundStyle(isActive ? .white : .Colors.textInactive)
             .disabled(!isActive)
-            .cornerRadius(100)
+            .clipShape(Capsule())
         }
+        .padding(.horizontal, 16)
     }
 }
 
 #Preview {
-    BaseButton(title: "Добавить товар", isActive: true, action: { print("Нажата кнопка") } )
+    BaseButton(title: "Добавить товар", isActive: true, action: { print("Нажата кнопка") })
 }
