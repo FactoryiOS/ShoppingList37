@@ -8,14 +8,34 @@
 import SwiftUI
 
 struct ContentView: View {
+    // MARK: - Properties
+    @State private var productName = ""
+    @State private var isError = false
+    private let placeholder = "Введите наименование товара"
+    private let subtitleTextField = "Это название уже используется"
+    private let titleButton = "Добавить товар"
+    
+    // MARK: - Body
     var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, world!")
+        ZStack {
+            Color.Colors.backgroundMain.ignoresSafeArea()
+            VStack {
+                InsertTextField(
+                    insertString: $productName,
+                    isSearchGlyph: false,
+                    isError: isError,
+                    placeholder: placeholder,
+                    subtitle: subtitleTextField
+                )
+                .onChange(of: productName) { _, newValue in
+                    isError = newValue == "Test"
+                }
+
+                Spacer()
+                
+                BaseButton(title: titleButton, isActive: !productName.isEmpty && !isError) { }
+            }
         }
-        .padding()
     }
 }
 
