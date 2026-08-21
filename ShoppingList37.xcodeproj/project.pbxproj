@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXFileReference section */
-		1142F4E9302A26C4004F1C72 /* ShoppingList37.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ShoppingList37.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		DE7B64CE3034D67A00322D37 /* ShoppingList37.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ShoppingList37.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -33,16 +33,8 @@
 			isa = PBXGroup;
 			children = (
 				1142F4EB302A26C4004F1C72 /* ShoppingList37 */,
-				1142F4EA302A26C4004F1C72 /* Products */,
+				DE7B64CE3034D67A00322D37 /* ShoppingList37.app */,
 			);
-			sourceTree = "<group>";
-		};
-		1142F4EA302A26C4004F1C72 /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				1142F4E9302A26C4004F1C72 /* ShoppingList37.app */,
-			);
-			name = Products;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -68,7 +60,7 @@
 			packageProductDependencies = (
 			);
 			productName = ShoppingList37;
-			productReference = 1142F4E9302A26C4004F1C72 /* ShoppingList37.app */;
+			productReference = DE7B64CE3034D67A00322D37 /* ShoppingList37.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -96,7 +88,7 @@
 			mainGroup = 1142F4E0302A26C4004F1C72;
 			minimizedProjectReferenceProxies = 1;
 			preferredProjectObjectVersion = 77;
-			productRefGroup = 1142F4EA302A26C4004F1C72 /* Products */;
+			productRefGroup = 1142F4E0302A26C4004F1C72;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
