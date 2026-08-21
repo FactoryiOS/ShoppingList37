@@ -8,22 +8,21 @@
 import SwiftUI
 
 struct IconPickerView: View {
-    
+
     @Binding var selectedIcon: PickerIcon?
-    
     let selectionColor: Color
-    
+
     @Environment(\.colorScheme) private var colorScheme
-    
+
     private var unselectedIconColor: Color {
         colorScheme == .dark ? .black : .white
     }
-    
+
     private let columns = Array(
         repeating: GridItem(.flexible(), spacing: 8),
         count: 6
     )
-    
+
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
             header
@@ -35,13 +34,13 @@ struct IconPickerView: View {
             RoundedRectangle(cornerRadius: 12)
         )
     }
-    
+
     private var header: some View {
         Text("Выберите дизайн")
             .font(.callout)
             .foregroundStyle(.primary)
     }
-    
+
     private var grid: some View {
         LazyVGrid(columns: columns, spacing: 12) {
             ForEach(PickerIcon.allCases) { icon in
@@ -52,20 +51,20 @@ struct IconPickerView: View {
             }
         }
     }
-    
+
     private func iconCell(
         _ icon: PickerIcon,
         isSelected: Bool
     ) -> some View {
-        
+
         let selectedFill = isSelected
             ? selectionColor
             : Color(uiColor: .secondarySystemBackground)
-        
+
         return ZStack {
             Circle()
                 .fill(selectedFill)
-            
+
             Image(icon.rawValue)
                 .resizable()
                 .scaledToFit()
