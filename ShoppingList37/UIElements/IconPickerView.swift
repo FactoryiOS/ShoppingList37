@@ -69,7 +69,11 @@ struct IconPickerView: View {
                 .resizable()
                 .scaledToFit()
                 .frame(width: 24, height: 24)
-                .foregroundStyle(.primary)
+                .foregroundStyle(
+                    isSelected
+                        ? .black
+                        : Color.Colors.backgroundSecondary
+                )
         }
         .frame(width: 48, height: 48)
         .contentShape(Circle())
