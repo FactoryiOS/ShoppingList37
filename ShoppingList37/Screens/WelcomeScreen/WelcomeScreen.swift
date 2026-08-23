@@ -26,10 +26,13 @@ struct WelcomeScreen: View {
                     .padding(.top, 12)
                 Text(TextConstants.doNotWorry)
                     .font(.system(size: 17, weight: .regular))
+                
+                Spacer()
+                
                 BaseButton(title: TextConstants.startButton, isActive: true) {
                     showContentView = true
                 }
-                .padding(.top, 101.3)
+                .padding(.bottom, 20)
             }
             .padding(.horizontal, 16)
         }
