@@ -34,6 +34,9 @@ struct BaseButton: View {
     }
 }
 
-#Preview {
-    BaseButton(title: "Добавить товар", isActive: true, action: { print("Нажата кнопка") })
+#Preview("Active") {
+    BaseButton(title: "Добавить товар", isActive: true, action: { print("Нажата активня кнопка") })
+}
+#Preview("No active") {
+    BaseButton(title: "Добавить товар", isActive: false, action: { print("Нажата не активная кнопка") })
 }

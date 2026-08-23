@@ -10,7 +10,6 @@ import SwiftUI
 struct InsertTextField: View {
     // MARK: - Properties
     @Binding var insertString: String
-    var isSearchGlyph: Bool
     var isError: Bool
     var placeholder: String
     var subtitle: String
@@ -21,15 +20,13 @@ struct InsertTextField: View {
     var body: some View {
         VStack {
             HStack {
-                searchGlyph
-                
-                universalTextField
+                universalTextField()
                 
                 Spacer()
                 
-                closeButton
+                closeButton()
             }
-            .frame(maxHeight: maxHeightTextFieldFrame)
+            .frame(maxHeight: 54)
             .background(backgroundColor)
             .cornerRadius(12)
             .overlay {
@@ -37,22 +34,12 @@ struct InsertTextField: View {
                     .stroke(borderColor, lineWidth: 1)
             }
             
-            errorSubtitle
+            errorSubtitle()
         }
         .padding()
     }
     
-    private var searchGlyph: some View {
-        VStack {
-            if isSearchGlyph {
-                Image(system: .magnifyingGlass)
-                    .foregroundStyle(.primary)
-                    .padding(.leading, 8)
-            }
-        }
-    }
-    
-    private var universalTextField: some View {
+    private func universalTextField() -> some View {
         VStack {
             TextField(
                 "",
@@ -60,13 +47,13 @@ struct InsertTextField: View {
                 prompt: Text(placeholder)
                     .foregroundStyle(Color.Colors.textInactive)
             )
-            .padding(.leading, leadingSize)
+            .padding(.leading, 16)
             .font(.body)
-            .frame(maxHeight: maxHeightTextField)
+            .frame(maxHeight: 38)
         }
     }
     
-    private var errorSubtitle: some View {
+    private func errorSubtitle() -> some View {
         VStack {
             if isError {
                 HStack {
@@ -80,18 +67,6 @@ struct InsertTextField: View {
         }
     }
     
-    private var maxHeightTextField: CGFloat {
-        isSearchGlyph ? 22 : 38
-    }
-    
-    private var leadingSize: CGFloat {
-        isSearchGlyph ? 0 : 16
-    }
-    
-    private var maxHeightTextFieldFrame: CGFloat {
-        isSearchGlyph ? 38 : 54
-    }
-    
     private var backgroundColor: Color {
         colorScheme == .dark ? .Colors.backgroundSecondary : .white
     }
@@ -100,9 +75,9 @@ struct InsertTextField: View {
         isError ? .Colors.errorMain : backgroundColor
     }
     
-    private var closeButton: some View {
+    private func closeButton() -> some View {
         VStack {
-            if !isSearchGlyph && insertString.count > 0 {
+            if insertString.count > 0 {
                 Button {
                     insertString = ""
                 } label: {
@@ -116,11 +91,28 @@ struct InsertTextField: View {
 }
 
 #Preview {
-    InsertTextField(
-        insertString: .constant(""),
-        isSearchGlyph: false,
-        isError: false,
-        placeholder: "Название товара",
-        subtitle: "Ошибка ввода"
-    )
+    @Previewable @State var productName: String = ""
+    @Previewable @State var isError: Bool = false
+    let placeholder = "Введите наименование товара"
+    let subtitleTextField = "Это название уже используется"
+    let titleButton = "Добавить товар"
+
+    ZStack {
+        Color.Colors.backgroundMain.ignoresSafeArea()
+        VStack {
+            InsertTextField(
+                insertString: $productName,
+                isError: isError,
+                placeholder: placeholder,
+                subtitle: subtitleTextField
+            )
+            .onChange(of: productName) { _, newValue in
+                isError = newValue == "Тест"
+            }
+            
+            Spacer()
+            
+            BaseButton(title: titleButton, isActive: !productName.isEmpty && !isError) { }
+        }
+    }
 }
