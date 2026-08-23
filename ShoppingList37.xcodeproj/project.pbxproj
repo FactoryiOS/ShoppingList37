@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXFileReference section */
-		DE7B64CE3034D67A00322D37 /* ShoppingList37.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; name = ShoppingList37.app; path = "/Users/andreiursan/Desktop/Новая папка/ShoppingList37/build/Debug-iphoneos/ShoppingList37.app"; sourceTree = "<absolute>"; };
+		DECCAF34303B14550074150A /* ShoppingList37.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; name = ShoppingList37.app; path = "/Users/andreiursan/Desktop/Новая папка/ShoppingList37/build/Debug-iphoneos/ShoppingList37.app"; sourceTree = "<absolute>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -59,7 +59,7 @@
 			packageProductDependencies = (
 			);
 			productName = ShoppingList37;
-			productReference = DE7B64CE3034D67A00322D37 /* ShoppingList37.app */;
+			productReference = DECCAF34303B14550074150A /* ShoppingList37.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
