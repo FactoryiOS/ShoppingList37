@@ -10,7 +10,7 @@ import SwiftUI
 struct BaseButton: View {
     // MARK: - Properties
     let title: String
-    let isActive: Bool
+    var isActive = true
     let action: () -> Void
     
     // MARK: - Body
@@ -35,7 +35,7 @@ struct BaseButton: View {
 }
 
 #Preview("Active") {
-    BaseButton(title: "Добавить товар", isActive: true, action: { print("Нажата активня кнопка") })
+    BaseButton(title: "Добавить товар", action: { print("Нажата активная кнопка") })
 }
 #Preview("No active") {
     BaseButton(title: "Добавить товар", isActive: false, action: { print("Нажата не активная кнопка") })
