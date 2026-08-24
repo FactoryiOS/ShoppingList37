@@ -1,10 +1,3 @@
-//
-//  IconPickerView.swift
-//  ShoppingList37
-//
-//  Created by Андрей Урсан on 18.08.2026.
-//
-
 import SwiftUI
 
 struct IconPickerView: View {
@@ -57,13 +50,13 @@ struct IconPickerView: View {
         isSelected: Bool
     ) -> some View {
 
-        let selectedFill = isSelected
+        let cellBackground = isSelected
             ? selectionColor
             : Color.Colors.iconBackground
 
         return ZStack {
             Circle()
-                .fill(selectedFill)
+                .fill(cellBackground)
 
             icon.image
                 .resizable()
