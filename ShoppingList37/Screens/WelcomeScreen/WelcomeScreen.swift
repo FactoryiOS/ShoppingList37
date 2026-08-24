@@ -51,6 +51,6 @@ private enum TextConstants {
 
 #Preview {
     WelcomeScreen() {
-        print("hihi")
+        print("Button clicked!")
     }
 }
