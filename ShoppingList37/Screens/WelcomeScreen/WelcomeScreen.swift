@@ -8,6 +8,8 @@ import SwiftUI
 struct WelcomeScreen: View {
     @State private var showContentView = false
     
+    let onComplete: () -> Void
+    
     var body: some View {
         if showContentView {
             ContentView()
@@ -30,7 +32,7 @@ struct WelcomeScreen: View {
                 Spacer()
                 
                 BaseButton(title: TextConstants.startButton, isActive: true) {
-                    showContentView = true
+                    onComplete()
                 }
                 .padding(.bottom, 20)
             }
@@ -48,5 +50,7 @@ private enum TextConstants {
 }
 
 #Preview {
-    WelcomeScreen()
+    WelcomeScreen() {
+        print("hihi")
+    }
 }
