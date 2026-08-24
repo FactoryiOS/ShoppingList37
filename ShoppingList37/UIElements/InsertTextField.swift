@@ -36,7 +36,6 @@ struct InsertTextField: View {
             
             errorSubtitle()
         }
-        .padding()
     }
     
     private func universalTextField() -> some View {
@@ -106,6 +105,7 @@ struct InsertTextField: View {
                 placeholder: placeholder,
                 subtitle: subtitleTextField
             )
+            .padding()
             .onChange(of: productName) { _, newValue in
                 isError = newValue == "Тест"
             }
