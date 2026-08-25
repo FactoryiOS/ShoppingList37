@@ -6,14 +6,20 @@
 //
 
 import SwiftUI
-import SwiftData
 
 @main
 struct ShoppingList37App: App {
+    @StateObject private var appState = AppState()
+    
     var body: some Scene {
         WindowGroup {
-            RootView()
+            if appState.mainState {
+                ContentView()
+            } else {
+                WelcomeScreen {
+                    appState.mainState = true
+                }
+            }
         }
-        .modelContainer(for: AppState.self)
     }
 }
