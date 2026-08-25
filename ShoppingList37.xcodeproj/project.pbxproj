@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXFileReference section */
-		4AC47380303C99CB00E36088 /* ShoppingList37.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ShoppingList37.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		DE90BD84303C3E9800F633F7 /* ShoppingList37.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ShoppingList37.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -33,7 +33,7 @@
 			isa = PBXGroup;
 			children = (
 				1142F4EB302A26C4004F1C72 /* ShoppingList37 */,
-				4AC47380303C99CB00E36088 /* ShoppingList37.app */,
+				DE90BD84303C3E9800F633F7 /* ShoppingList37.app */,
 			);
 			sourceTree = "<group>";
 		};
@@ -60,7 +60,7 @@
 			packageProductDependencies = (
 			);
 			productName = ShoppingList37;
-			productReference = 4AC47380303C99CB00E36088 /* ShoppingList37.app */;
+			productReference = DE90BD84303C3E9800F633F7 /* ShoppingList37.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
