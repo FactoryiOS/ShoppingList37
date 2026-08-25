@@ -13,7 +13,7 @@ enum ColorSectionText: String {
 }
 
 struct ColorSelector: View {
-    @State private var selectedColor: ColorOption?
+    @Binding var selectedColor: ColorOption?
     
     var colorSectionText: String
     
@@ -53,9 +53,13 @@ struct ColorSelector: View {
 }
 
 #Preview("Create list") {
-    ColorSelector(colorSectionText: ColorSectionText.create.rawValue)
+    ColorSelector(
+        selectedColor: .constant(nil),
+        colorSectionText: ColorSectionText.create.rawValue)
 }
 
 #Preview("Edit list") {
-    ColorSelector(colorSectionText: ColorSectionText.edit.rawValue)
+    ColorSelector(
+        selectedColor: .constant(nil),
+        colorSectionText: ColorSectionText.edit.rawValue)
 }
