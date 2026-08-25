@@ -10,34 +10,28 @@ import SwiftUI
 struct ListCellView: View {
 
     let item: ListItem
-    let action: () -> Void
 
     var body: some View {
-        Button {
-            action()
-        } label: {
-            HStack(spacing: 12) {
-                avatarField
+        HStack(spacing: 12) {
+            avatarField
 
-                Text(item.name)
-                    .font(.title3)
-                    .foregroundStyle(Color.Colors.textPrimary)
-                    .lineLimit(1)
+            Text(item.name)
+                .font(.title3.bold())
+                .foregroundStyle(Color.Colors.textPrimary)
+                .lineLimit(1)
 
-                Spacer()
+            Spacer()
 
-                counterField
-            }
-            .padding(.horizontal, 16)
-            .padding(.vertical, 18)
-            .frame(maxWidth: .infinity, alignment: .leading)
-            .frame(minHeight: 84, alignment: .leading)
-            .background(Color.Colors.backgroundSecondary)
-            .clipShape(
-                RoundedRectangle(cornerRadius: 16)
-            )
+            counterField
         }
-        .buttonStyle(.plain)
+        .padding(.horizontal, 16)
+        .padding(.vertical, 18)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .frame(minHeight: 84, alignment: .leading)
+        .background(Color.Colors.backgroundSecondary)
+        .clipShape(
+            RoundedRectangle(cornerRadius: 16)
+        )
     }
 
     // MARK: - Avatar
@@ -62,16 +56,14 @@ struct ListCellView: View {
         HStack(spacing: 1) {
             Text("\(item.amount)")
                 .font(.body)
-                .foregroundStyle(Color.Colors.textPrimary)
 
             Text("/")
                 .font(.body)
-                .foregroundStyle(Color.Colors.textPrimary)
 
             Text("\(item.totalAmount)")
-                .font(.subheadline)
-                .foregroundStyle(Color.Colors.textPrimary)
+                .font(.subheadline.bold())
         }
+        .foregroundStyle(Color.Colors.textPrimary)
         .padding(.horizontal, 10)
         .padding(.vertical, 6)
     }
@@ -82,9 +74,7 @@ struct ListCellView: View {
         Color.Colors.backgroundMain
             .ignoresSafeArea()
 
-        ListCellView(item: .mock) {
-            print("Tapped")
-        }
-        .padding()
+        ListCellView(item: .mock)
+            .padding()
     }
 }
