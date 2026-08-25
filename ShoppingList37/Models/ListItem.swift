@@ -7,13 +7,17 @@
 
 import Foundation
 
-struct ListItem: Identifiable, Hashable {
+struct ListItem: Identifiable {
     let id = UUID()
     let name: String
     let color: ColorOption
     let icon: PickerIcon
-    var amount: Int
+    var items: [ShoppingItem]
     let totalAmount: Int
+
+    var amount: Int {
+        items.count
+    }
 }
 
 extension ListItem {
@@ -21,7 +25,23 @@ extension ListItem {
         name: "Покупки на неделю",
         color: .blue,
         icon: .airplane,
-        amount: 3,
+        items: [
+            ShoppingItem(
+                title: "Молоко",
+                count: 2,
+                unit: .piece
+            ),
+            ShoppingItem(
+                title: "Хлеб",
+                count: 1,
+                unit: .piece
+            ),
+            ShoppingItem(
+                title: "Яблоки",
+                count: 5,
+                unit: .piece
+            )
+        ],
         totalAmount: 10
     )
 
@@ -30,21 +50,29 @@ extension ListItem {
             name: "Новый год",
             color: .blue,
             icon: .calendarNumber,
-            amount: 10,
+            items: [
+                .mock,
+                .purchasedMock
+            ],
             totalAmount: 20
         ),
         .init(
             name: "Для кота",
             color: .green,
             icon: .paw,
-            amount: 1,
+            items: [
+                .mock
+            ],
             totalAmount: 4
         ),
         .init(
             name: "Вечеринка",
             color: .yellow,
             icon: .gameController,
-            amount: 9,
+            items: [
+                .mock,
+                .purchasedMock
+            ],
             totalAmount: 20
         )
     ]
