@@ -22,4 +22,7 @@ extension Font {
     
     // Мелкий текст, подписи и сноски (из раздела Footnote)
     static let footnote = Font.system(size: 13, weight: .regular)
+    
+    /// Текст заголовка секций выбора иконки и цвета на экранах создания и редактирования списка
+    static let iosCalloutRegular = Font.system(size: 16, weight: .regular)
 }
