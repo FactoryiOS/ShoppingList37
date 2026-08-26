@@ -13,7 +13,7 @@ enum ColorSectionText: String {
 }
 
 struct ColorSelector: View {
-    @State private var selectedColor: ColorOption?
+    @Binding var selectedColor: ColorOption?
     
     var colorSectionText: String
     
@@ -22,7 +22,6 @@ struct ColorSelector: View {
             Text(colorSectionText)
                 .font(.iosCalloutRegular)
                 .frame(maxWidth: .infinity, alignment: .leading)
-                .padding(.horizontal, 12)
             
             HStack(spacing: 12) {
                 ForEach(ColorOption.allCases, id: \.self) { colorOption in
@@ -45,7 +44,6 @@ struct ColorSelector: View {
                     .buttonStyle(.plain)
                 }
             }
-            .padding(.horizontal, 12)
         }
         .padding()
         .background(Color.Colors.backgroundSecondary)
@@ -53,9 +51,13 @@ struct ColorSelector: View {
 }
 
 #Preview("Create list") {
-    ColorSelector(colorSectionText: ColorSectionText.create.rawValue)
+    ColorSelector(
+        selectedColor: .constant(nil),
+        colorSectionText: ColorSectionText.create.rawValue)
 }
 
 #Preview("Edit list") {
-    ColorSelector(colorSectionText: ColorSectionText.edit.rawValue)
+    ColorSelector(
+        selectedColor: .constant(nil),
+        colorSectionText: ColorSectionText.edit.rawValue)
 }
