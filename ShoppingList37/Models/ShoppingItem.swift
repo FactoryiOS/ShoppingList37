@@ -43,4 +43,10 @@ extension ShoppingItem {
         unit: .piece,
         isPurchased: true
     )
+    
+    static let itemsMock = [
+        ShoppingItem(title: "Чайник", count: 1, unit: .piece),
+        ShoppingItem(title: "Кружка", count: 4, unit: .piece),
+        ShoppingItem(title: "Торт", count: 1, unit: .piece, isPurchased: true)
+    ]
 }
