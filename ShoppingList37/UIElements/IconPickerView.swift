@@ -1,3 +1,9 @@
+//
+//  IconPickerView.swift
+//
+//  Created by Андрей Урсан on 18.08.2026.
+//
+
 import SwiftUI
 
 struct IconPickerView: View {
