@@ -30,9 +30,9 @@ struct CreateEditListView: View {
         initialIcon: PickerIcon? = nil
     ) {
         self.existingListId = existingListId
-        self._insertString = State(initialValue: initialString)
-        self._selectedColor = State(initialValue: initialColor)
-        self._selectedIcon = State(initialValue: initialIcon)
+        _insertString = State(initialValue: initialString)
+        _selectedColor = State(initialValue: initialColor)
+        _selectedIcon = State(initialValue: initialIcon)
     }
     
     private var isEditMode: Bool {

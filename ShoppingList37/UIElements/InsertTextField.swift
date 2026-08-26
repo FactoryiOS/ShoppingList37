@@ -35,7 +35,7 @@ struct InsertTextField: View {
             
             errorSubtitle()
         }
-        .padding()
+        .padding(.horizontal)
     }
     
     private func universalTextField() -> some View {

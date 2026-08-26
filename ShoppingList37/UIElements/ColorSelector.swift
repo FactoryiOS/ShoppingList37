@@ -22,7 +22,6 @@ struct ColorSelector: View {
             Text(colorSectionText)
                 .font(.iosCalloutRegular)
                 .frame(maxWidth: .infinity, alignment: .leading)
-                .padding(.horizontal, 12)
             
             HStack(spacing: 12) {
                 ForEach(ColorOption.allCases, id: \.self) { colorOption in
@@ -45,7 +44,6 @@ struct ColorSelector: View {
                     .buttonStyle(.plain)
                 }
             }
-            .padding(.horizontal, 12)
         }
         .padding()
         .background(Color.Colors.backgroundSecondary)
