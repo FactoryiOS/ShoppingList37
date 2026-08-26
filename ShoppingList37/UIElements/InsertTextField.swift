@@ -26,7 +26,6 @@ struct InsertTextField: View {
                 
                 closeButton()
             }
-            .frame(maxHeight: 54)
             .background(backgroundColor)
             .cornerRadius(12)
             .overlay {
@@ -36,7 +35,7 @@ struct InsertTextField: View {
             
             errorSubtitle()
         }
-        .padding()
+        .padding(.horizontal)
     }
     
     private func universalTextField() -> some View {
@@ -48,8 +47,8 @@ struct InsertTextField: View {
                     .foregroundStyle(Color.Colors.textInactive)
             )
             .padding(.leading, 16)
+            .padding(.vertical, 12)
             .font(.body)
-            .frame(maxHeight: 38)
         }
     }
     
