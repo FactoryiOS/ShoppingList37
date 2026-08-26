@@ -25,6 +25,7 @@ struct ShoppingItemCell: View {
                         )
                 }
             }
+            .frame(width: 44, height: 44)
             
             Text(item.title)
                 .font(.body)
