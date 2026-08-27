@@ -8,7 +8,7 @@ import SwiftUI
 
 struct MainListsView: View {
     
-    @State private var lists = ListItem.mocks
+    @State private var lists: [ListItem]
     
     init(initialLists: [ListItem] = ListItem.mocks) {
         _lists = State(initialValue: initialLists)
@@ -26,7 +26,14 @@ struct MainListsView: View {
                                 ListCellView(item: list)
                                     .listRowBackground(Color.clear)
                                     .listRowSeparator(.hidden)
-                                    .listRowInsets(EdgeInsets(top: 6, leading: 16, bottom: 6, trailing: 16))
+                                    .listRowInsets(
+                                        EdgeInsets(
+                                            top: 6,
+                                            leading: 16,
+                                            bottom: 6,
+                                            trailing: 16
+                                        )
+                                    )
                             }
                             
                         }
