@@ -6,18 +6,36 @@
 //
 
 import Foundation
+import SwiftData
 
-struct ListItem: Identifiable {
-    let id = UUID()
-    let name: String
-    let color: ColorOption
-    let icon: PickerIcon
+@Model
+class ListItem: Identifiable {
+    var id = UUID()
+    var name: String
+    var color: ColorOption
+    var icon: PickerIcon
     var items: [ShoppingItem]
-    let totalAmount: Int
-
+    var totalAmount: Int
+    
     var amount: Int {
         items.count
     }
+    
+    init(
+        name: String,
+        color: ColorOption,
+        icon: PickerIcon,
+        items: [ShoppingItem],
+        totalAmount: Int
+    ) {
+        self.name = name
+        self.color = color
+        self.icon = icon
+        self.items = items
+        self.totalAmount = totalAmount
+    }
+    
+
 }
 
 extension ListItem {

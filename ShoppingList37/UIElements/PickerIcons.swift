@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-enum PickerIcon: CaseIterable, Identifiable {
+enum PickerIcon: CaseIterable, Identifiable, Codable {
 
     var id: Self { self }
 
