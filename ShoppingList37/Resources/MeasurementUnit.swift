@@ -7,12 +7,12 @@
 
 import Foundation
 
-enum MeasurementUnit {
-    case piece
-    case kilogram
-    case gram
-    case liter
-    case milliliter
+enum MeasurementUnit: String, CaseIterable {
+    case piece = "шт"
+    case kilogram = "кг"
+    case gram = "г"
+    case liter = "л"
+    case milliliter = "мл"
     
     var short: String {
         switch self {
