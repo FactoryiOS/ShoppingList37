@@ -84,15 +84,21 @@ struct MainListsView: View {
 }
 
 #Preview("Data") {
-    let container = try! ModelContainer(
-        for: ListItem.self,
-        configurations: ModelConfiguration(isStoredInMemoryOnly: true)
-    )
-    
-    for list in ListItem.mocks {
-        container.mainContext.insert(list)
-    }
+    let previewContainer: ModelContainer = {
+        do {
+            let container = try ModelContainer(
+                for: ListItem.self,
+                configurations: ModelConfiguration(isStoredInMemoryOnly: true)
+            )
+            for list in ListItem.mocks {
+                container.mainContext.insert(list)
+            }
+            return container
+        } catch {
+            fatalError("Не удалось создать превью-контейнер: \(error)")
+        }
+    }()
     
     return MainListsView()
-        .modelContainer(container)
+        .modelContainer(previewContainer)
 }
