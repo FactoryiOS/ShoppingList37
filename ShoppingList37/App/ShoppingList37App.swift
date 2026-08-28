@@ -9,9 +9,17 @@ import SwiftUI
 
 @main
 struct ShoppingList37App: App {
+    @StateObject private var appState = AppState()
+    
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            if appState.mainState {
+                ContentView()
+            } else {
+                WelcomeScreen {
+                    appState.mainState = true
+                }
+            }
         }
     }
 }
