@@ -9,6 +9,8 @@ import SwiftUI
 
 @main
 struct ShoppingList37App: App {
+    @StateObject private var appState = AppState()
+    
     @AppStorage("appScheme")
     
     private var appScheme = AppScheme.system.rawValue
@@ -26,8 +28,14 @@ struct ShoppingList37App: App {
     
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            if appState.mainState {
+                ContentView()
+            } else {
+                WelcomeScreen {
+                    appState.mainState = true
+                }
                 .preferredColorScheme(colorScheme)
+            }
         }
     }
 }
