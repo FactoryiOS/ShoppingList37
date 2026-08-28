@@ -7,8 +7,45 @@
 import SwiftUI
 
 struct MainListsView: View {
-    
     @State private var lists: [ListItem]
+    @AppStorage("appScheme")
+    
+    private var appScheme = AppScheme.system.rawValue
+    
+    private var selectedScheme: AppScheme {
+        AppScheme(rawValue: appScheme) ?? .system
+    }
+    private var themeIcon: String {
+        switch selectedScheme {
+        case .dark:
+            return "circle.lefthalf.filled"
+        case .light, .system:
+            return "circle.righthalf.filled"
+        }
+    }
+    private var navigationMenu: some View {
+        Menu {
+            Menu {
+                ForEach(AppScheme.allCases, id: \.self) { scheme in
+                    Button {
+                        appScheme = scheme.rawValue
+                    } label: {
+                        HStack {
+                            Text(scheme.title)
+                            
+                            if selectedScheme == scheme {
+                                Image(systemName: "checkmark")
+                            }
+                        }
+                    }
+                }
+            } label: {
+                Label("Установить тему", systemImage: themeIcon)
+            }
+        } label: {
+            Image(systemName: "ellipsis.circle")
+        }
+    }
     
     init(initialLists: [ListItem] = ListItem.mocks) {
         _lists = State(initialValue: initialLists)
@@ -43,6 +80,11 @@ struct MainListsView: View {
                     }
                 }
                 .navigationTitle("Мои списки")
+                .toolbar {
+                    ToolbarItem(placement: .topBarTrailing) {
+                        navigationMenu
+                    }
+                }
                 
                 Spacer()
                 
