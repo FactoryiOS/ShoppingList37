@@ -6,18 +6,21 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct ItemsListView: View {
-    @State private var items = ShoppingItem.itemsMock
     @State private var selectedItem: ShoppingItem?
     @State private var searchText = ""
-    
+    @State private var isShowingCreateSheet = false
+    @Environment(\.modelContext) var modelContext
+    var list: ListItem
+
     private var filteredItems: [ShoppingItem] {
         guard !searchText.isEmpty else {
-            return items
+            return list.items
         }
         
-        return items.filter {
+        return list.items.filter {
             $0.title.localizedCaseInsensitiveContains(searchText)
         }
     }
@@ -25,12 +28,14 @@ struct ItemsListView: View {
     var body: some View {
         VStack(spacing: 0) {
             List {
-                ForEach($items) { $item in
-                    ShoppingItemCell(item: $item)
+                ForEach(filteredItems) { item in
+                    ShoppingItemCell(item: item)
                         .onTapGesture {
+                            item.isPurchased.toggle()
                         }
                         .swipeActions(edge: .trailing, allowsFullSwipe: false) {
                             Button(role: .destructive) {
+                                modelContext.delete(item)
                             } label: {
                                 Label("", systemImage: "trash")
                             }
@@ -62,15 +67,23 @@ struct ItemsListView: View {
             BaseButton(
                 title: "Добавить товар"
             ) {
+               isShowingCreateSheet = true
             }
             .padding(.horizontal, 16)
             .padding(.vertical, 12)
+        }
+        .sheet(isPresented: $isShowingCreateSheet) {
+            Text("Добавление товара")
+        }
+        .sheet(item: $selectedItem) { unwrappedItem in
+            Text("Редактировать")
         }
     }
 }
 
 #Preview {
     NavigationStack {
-        ItemsListView()
+        ItemsListView(list: .mock)
+            .modelContainer(for: ListItem.self, inMemory: true)
     }
 }

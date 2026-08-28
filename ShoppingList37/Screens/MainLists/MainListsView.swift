@@ -84,6 +84,15 @@ struct MainListsView: View {
 }
 
 #Preview("Data") {
-    MainListsView()
-        .modelContainer(for: ListItem.self, inMemory: true)
+    let container = try! ModelContainer(
+        for: ListItem.self,
+        configurations: ModelConfiguration(isStoredInMemoryOnly: true)
+    )
+    
+    for list in ListItem.mocks {
+        container.mainContext.insert(list)
+    }
+    
+    return MainListsView()
+        .modelContainer(container)
 }
