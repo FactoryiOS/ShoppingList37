@@ -29,12 +29,12 @@ struct ShoppingList37App: App {
     var body: some Scene {
         WindowGroup {
             if appState.mainState {
-                ContentView()
+                MainListsView()
+                    .preferredColorScheme(colorScheme)
             } else {
                 WelcomeScreen {
                     appState.mainState = true
                 }
-                .preferredColorScheme(colorScheme)
             }
         }
     }
