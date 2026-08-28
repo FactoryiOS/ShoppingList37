@@ -73,10 +73,10 @@ struct ItemsListView: View {
             .padding(.vertical, 12)
         }
         .sheet(isPresented: $isShowingCreateSheet) {
-            Text("Добавление товара")
+            ProductView(mode: .create, list: list)
         }
-        .sheet(item: $selectedItem) { unwrappedItem in
-            Text("Редактировать")
+        .sheet(item: $selectedItem){ unwrappedItem in
+            ProductView(mode: .edit, list: list, existingItem: unwrappedItem)
         }
     }
 }

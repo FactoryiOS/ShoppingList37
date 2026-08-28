@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import SwiftData
 
 enum ProductMode {
     case create
@@ -14,7 +15,12 @@ enum ProductMode {
 
 struct ProductView: View {
     let mode: ProductMode
+    var list: ListItem
+    var existingItem: ShoppingItem?
     
+    @Environment(\.modelContext) var modelContext
+    @Environment(\.dismiss) var dismiss
+
     @State private var productName = ""
     @State private var productCount = ""
     @State private var unitOfMeasurement: MeasurementUnit? = MeasurementUnit.piece
@@ -26,7 +32,7 @@ struct ProductView: View {
             VStack {
                 HStack {
                     Button {
-                        
+                        dismiss()
                     } label: {
                         Text("Отменить")
                             .padding(.leading, 16)
@@ -38,7 +44,19 @@ struct ProductView: View {
                         .foregroundColor(.Colors.textSecondary)
                     Spacer()
                     Button {
-                        
+                        if mode == .create {
+                            let newItem = ShoppingItem(
+                                title: productName,
+                                count: Int(productCount) ?? 1,
+                                unit: unitOfMeasurement ?? .piece
+                            )
+                            list.items.append(newItem)
+                        } else {
+                            existingItem?.title = productName
+                            existingItem?.count = Int(productCount) ?? 1
+                            existingItem?.unit = unitOfMeasurement ?? .piece
+                        }
+                        dismiss()
                     } label: {
                         Text("Готово")
                             .padding(.trailing, 16)
@@ -134,9 +152,9 @@ struct ProductView: View {
 }
 
 #Preview("Создание") {
-    ProductView(mode: .create)
+    ProductView(mode: .create, list: .mock)
 }
 
 #Preview("Редактирование") {
-    ProductView(mode: .edit)
+    ProductView(mode: .edit, list: .mock, existingItem: .mock)
 }
