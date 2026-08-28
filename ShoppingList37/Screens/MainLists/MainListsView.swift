@@ -5,14 +5,12 @@
 //  Created by Kristina Kostenko on 26.08.26.
 //
 import SwiftUI
+import SwiftData
 
 struct MainListsView: View {
     
-    @State private var lists: [ListItem]
-    
-    init(initialLists: [ListItem] = ListItem.mocks) {
-        _lists = State(initialValue: initialLists)
-    }
+    @Query private var lists: [ListItem]
+    @Environment(\.modelContext) var modelContext
     
     var body: some View {
         NavigationStack {
@@ -34,6 +32,28 @@ struct MainListsView: View {
                                             trailing: 16
                                         )
                                     )
+                                    .swipeActions(edge: .trailing, allowsFullSwipe: false) {
+                                        Button(role: .destructive) {
+                                            modelContext.delete(list)
+                                        } label: {
+                                            Image(systemName: "trash")
+                                        }
+                                        .tint(.red)
+                                        
+                                        Button {
+                                            let newItem = ListItem(
+                                                name: "\(list.name) (Копия)",
+                                                color: list.color,
+                                                icon: list.icon,
+                                                items: [],
+                                                totalAmount: 0
+                                            )
+                                            modelContext.insert(newItem)
+                                        } label: {
+                                            Image(systemName: "plus.square.on.square")
+                                        }
+                                        .tint(.orange)
+                                    }
                             }
                             
                         }
@@ -58,10 +78,12 @@ struct MainListsView: View {
 
 #Preview("Empty") {
     NavigationStack {
-        MainListsView(initialLists: [])
+        MainListsView()
+            .modelContainer(for: ListItem.self, inMemory: true)
     }
 }
 
 #Preview("Data") {
-    MainListsView(initialLists: ListItem.mocks)
+    MainListsView()
+        .modelContainer(for: ListItem.self, inMemory: true)
 }

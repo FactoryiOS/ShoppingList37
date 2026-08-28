@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import SwiftData
 
 private enum TextConstants {
     static let createTitle = "Создать список"
@@ -17,26 +18,29 @@ private enum TextConstants {
 
 struct CreateEditListView: View {
     
-    var existingListId: UUID?
+    var existingList: ListItem?
+    
+    @Environment(\.modelContext) var modelContext
+    @Environment(\.dismiss) var dismiss
     
     @State private var insertString: String = ""
     @State private var selectedColor: ColorOption?
     @State private var selectedIcon: PickerIcon?
     
     init(
-        existingListId: UUID? = nil,
+        existingList: ListItem? = nil,
         initialString: String = "",
         initialColor: ColorOption? = nil,
         initialIcon: PickerIcon? = nil
     ) {
-        self.existingListId = existingListId
+        self.existingList = existingList
         _insertString = State(initialValue: initialString)
         _selectedColor = State(initialValue: initialColor)
         _selectedIcon = State(initialValue: initialIcon)
     }
     
     private var isEditMode: Bool {
-        existingListId != nil
+        existingList != nil
     }
     
     var body: some View {
@@ -66,7 +70,24 @@ struct CreateEditListView: View {
                 title: isEditMode ? TextConstants.saveButton : TextConstants.createButton,
                 isActive: !insertString.isEmpty && selectedIcon != nil && selectedColor != nil
             ) {
+                guard let selectedColor, let selectedIcon else { return }
                 
+                    let newList = ListItem(
+                        name: insertString,
+                        color: selectedColor,
+                        icon: selectedIcon,
+                        items: [],
+                        totalAmount: 0
+                    )
+                if isEditMode {
+                    existingList?.name = newList.name
+                    existingList?.color = newList.color
+                    existingList?.icon = newList.icon
+                } else {
+                    modelContext.insert(newList)
+                }
+                
+                dismiss()
             }
             .padding(.bottom, 20)
         }
@@ -85,7 +106,7 @@ struct CreateEditListView: View {
 #Preview("Edit list") {
     NavigationStack {
         CreateEditListView(
-            existingListId: UUID(),
+            existingList: .mock,
             initialString: "Новый год",
             initialColor: ColorOption.blue,
             initialIcon: PickerIcon.airplane
