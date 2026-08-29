@@ -5,9 +5,13 @@
 //  Created by Kristina Kostenko on 26.08.26.
 //
 import SwiftUI
+import SwiftData
 
 struct MainListsView: View {
-    @State private var lists: [ListItem]
+    
+    @Query private var lists: [ListItem]
+    @Environment(\.modelContext) var modelContext
+    @State private var isShowingCreateSheet = false
     @AppStorage("appScheme")
     
     private var appScheme = AppScheme.system.rawValue
@@ -47,10 +51,6 @@ struct MainListsView: View {
         }
     }
     
-    init(initialLists: [ListItem] = ListItem.mocks) {
-        _lists = State(initialValue: initialLists)
-    }
-    
     var body: some View {
         NavigationStack {
             VStack {
@@ -71,6 +71,34 @@ struct MainListsView: View {
                                             trailing: 16
                                         )
                                     )
+                                    .swipeActions(edge: .trailing, allowsFullSwipe: false) {
+                                        Button(role: .destructive) {
+                                            modelContext.delete(list)
+                                        } label: {
+                                            Image(systemName: "trash")
+                                        }
+                                        .tint(.red)
+                                        
+                                        Button {
+                                            let newItem = ListItem(
+                                                name: "\(list.name) (Копия)",
+                                                color: list.color,
+                                                icon: list.icon,
+                                                items: list.items.map { oldItem in
+                                                    ShoppingItem(
+                                                        title: oldItem.title,
+                                                        count: oldItem.count,
+                                                        unit: oldItem.unit
+                                                    )
+                                                },
+                                                totalAmount: list.totalAmount
+                                            )
+                                            modelContext.insert(newItem)
+                                        } label: {
+                                            Image(systemName: "plus.square.on.square")
+                                        }
+                                        .tint(.orange)
+                                    }
                             }
                             
                         }
@@ -89,9 +117,14 @@ struct MainListsView: View {
                 Spacer()
                 
                 BaseButton(title: "Создать список", isActive: true) {
-                    
+                    isShowingCreateSheet = true
                 }
                 .padding(.bottom, 20)
+                .sheet(isPresented: $isShowingCreateSheet) {
+                    NavigationStack {
+                        CreateEditListView()
+                    }
+                }
             }
             .background(Color.Colors.backgroundMain)
         }
@@ -100,10 +133,27 @@ struct MainListsView: View {
 
 #Preview("Empty") {
     NavigationStack {
-        MainListsView(initialLists: [])
+        MainListsView()
+            .modelContainer(for: ListItem.self, inMemory: true)
     }
 }
 
 #Preview("Data") {
-    MainListsView(initialLists: ListItem.mocks)
+    let previewContainer: ModelContainer = {
+        do {
+            let container = try ModelContainer(
+                for: ListItem.self,
+                configurations: ModelConfiguration(isStoredInMemoryOnly: true)
+            )
+            for list in ListItem.mocks {
+                container.mainContext.insert(list)
+            }
+            return container
+        } catch {
+            fatalError("Не удалось создать превью-контейнер: \(error)")
+        }
+    }()
+    
+    return MainListsView()
+        .modelContainer(previewContainer)
 }

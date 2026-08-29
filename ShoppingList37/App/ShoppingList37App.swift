@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import SwiftData
 
 @main
 struct ShoppingList37App: App {
@@ -37,5 +38,6 @@ struct ShoppingList37App: App {
                 }
             }
         }
+        .modelContainer(for: ListItem.self)
     }
 }

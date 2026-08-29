@@ -7,10 +7,11 @@
 
 import SwiftUI
 
-enum PickerIcon: CaseIterable, Identifiable {
+enum PickerIcon: String, CaseIterable, Identifiable, Codable {
 
     var id: Self { self }
-
+    
+    case snowflake
     case airplane
     case balloon
     case bandage
@@ -28,10 +29,13 @@ enum PickerIcon: CaseIterable, Identifiable {
     case gameController
     case gift
     case paw
-    case snowflake
+}
 
+extension PickerIcon {
     var image: Image {
         switch self {
+        case .snowflake:
+            Image(.Icons.snowflake)
         case .airplane:
             Image(.Icons.airplane)
         case .balloon:
@@ -66,8 +70,6 @@ enum PickerIcon: CaseIterable, Identifiable {
             Image(.Icons.gift)
         case .paw:
             Image(.Icons.paw)
-        case .snowflake:
-            Image(.Icons.snowflake)
         }
     }
 }

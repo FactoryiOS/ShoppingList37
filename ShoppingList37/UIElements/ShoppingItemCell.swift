@@ -9,7 +9,7 @@ import SwiftUI
 
 struct ShoppingItemCell: View {
     @Environment(\.colorScheme) private var colorScheme
-    @Binding var item: ShoppingItem
+    var item: ShoppingItem
     
     var body: some View {
         HStack(spacing: 12) {
@@ -51,9 +51,9 @@ struct ShoppingItemCell: View {
 }
 
 #Preview("Не куплено") {
-    ShoppingItemCell(item: .constant(.mock))
+    ShoppingItemCell(item: .mock)
 }
 
 #Preview("Куплено") {
-    ShoppingItemCell(item: .constant(.purchasedMock))
+    ShoppingItemCell(item: .purchasedMock)
 }
