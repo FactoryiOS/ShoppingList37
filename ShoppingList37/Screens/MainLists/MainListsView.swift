@@ -12,6 +12,44 @@ struct MainListsView: View {
     @Query private var lists: [ListItem]
     @Environment(\.modelContext) var modelContext
     @State private var isShowingCreateSheet = false
+    @AppStorage("appScheme")
+    
+    private var appScheme = AppScheme.system.rawValue
+    
+    private var selectedScheme: AppScheme {
+        AppScheme(rawValue: appScheme) ?? .system
+    }
+    private var themeIcon: String {
+        switch selectedScheme {
+        case .dark:
+            return "circle.lefthalf.filled"
+        case .light, .system:
+            return "circle.righthalf.filled"
+        }
+    }
+    private var navigationMenu: some View {
+        Menu {
+            Menu {
+                ForEach(AppScheme.allCases, id: \.self) { scheme in
+                    Button {
+                        appScheme = scheme.rawValue
+                    } label: {
+                        HStack {
+                            Text(scheme.title)
+                            
+                            if selectedScheme == scheme {
+                                Image(systemName: "checkmark")
+                            }
+                        }
+                    }
+                }
+            } label: {
+                Label("Установить тему", systemImage: themeIcon)
+            }
+        } label: {
+            Image(systemName: "ellipsis.circle")
+        }
+    }
     
     var body: some View {
         NavigationStack {
@@ -70,6 +108,11 @@ struct MainListsView: View {
                     }
                 }
                 .navigationTitle("Мои списки")
+                .toolbar {
+                    ToolbarItem(placement: .topBarTrailing) {
+                        navigationMenu
+                    }
+                }
                 
                 Spacer()
                 
