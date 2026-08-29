@@ -8,37 +8,51 @@
 import SwiftUI
 
 struct ItemsListView: View {
+
+    @Environment(NavigationRoute.self) private var router
+
     @State private var items = ShoppingItem.itemsMock
-    @State private var selectedItem: ShoppingItem?
     @State private var searchText = ""
-    
+
     private var filteredItems: [ShoppingItem] {
         guard !searchText.isEmpty else {
             return items
         }
-        
+
         return items.filter {
             $0.title.localizedCaseInsensitiveContains(searchText)
         }
     }
-    
+
     var body: some View {
         VStack(spacing: 0) {
             List {
                 ForEach($items) { $item in
                     ShoppingItemCell(item: $item)
+                        .contentShape(Rectangle())
                         .onTapGesture {
+                            router.showModal(.editProduct)
                         }
-                        .swipeActions(edge: .trailing, allowsFullSwipe: false) {
+                        .swipeActions(
+                            edge: .trailing,
+                            allowsFullSwipe: false
+                        ) {
                             Button(role: .destructive) {
+
                             } label: {
-                                Label("", systemImage: "trash")
+                                Label(
+                                    "",
+                                    systemImage: "trash"
+                                )
                             }
-                            
+
                             Button {
-                                selectedItem = item
+                                router.showModal(.editProduct)
                             } label: {
-                                Label("", systemImage: "square.and.pencil")
+                                Label(
+                                    "",
+                                    systemImage: "square.and.pencil"
+                                )
                             }
                             .tint(.Colors.swipeLightGrey)
                         }
@@ -58,10 +72,11 @@ struct ItemsListView: View {
                 placement: .navigationBarDrawer(displayMode: .always),
                 prompt: "Поиск"
             )
-            
+
             BaseButton(
                 title: "Добавить товар"
             ) {
+                router.showModal(.createProduct)
             }
             .padding(.horizontal, 16)
             .padding(.vertical, 12)
@@ -73,4 +88,5 @@ struct ItemsListView: View {
     NavigationStack {
         ItemsListView()
     }
+    .environment(NavigationRoute())
 }
