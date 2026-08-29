@@ -11,6 +11,7 @@ struct MainListsView: View {
     
     @Query private var lists: [ListItem]
     @Environment(\.modelContext) var modelContext
+    @State private var isShowingCreateSheet = false
     
     var body: some View {
         NavigationStack {
@@ -45,8 +46,14 @@ struct MainListsView: View {
                                                 name: "\(list.name) (Копия)",
                                                 color: list.color,
                                                 icon: list.icon,
-                                                items: [],
-                                                totalAmount: 0
+                                                items: list.items.map { oldItem in
+                                                    ShoppingItem(
+                                                        title: oldItem.title,
+                                                        count: oldItem.count,
+                                                        unit: oldItem.unit
+                                                    )
+                                                },
+                                                totalAmount: list.totalAmount
                                             )
                                             modelContext.insert(newItem)
                                         } label: {
@@ -67,9 +74,14 @@ struct MainListsView: View {
                 Spacer()
                 
                 BaseButton(title: "Создать список", isActive: true) {
-                    
+                    isShowingCreateSheet = true
                 }
                 .padding(.bottom, 20)
+                .sheet(isPresented: $isShowingCreateSheet) {
+                    NavigationStack {
+                        CreateEditListView()
+                    }
+                }
             }
             .background(Color.Colors.backgroundMain)
         }

@@ -14,6 +14,7 @@ class ListItem: Identifiable {
     var name: String
     var color: ColorOption
     var icon: PickerIcon
+    @Relationship(deleteRule: .cascade)
     var items: [ShoppingItem]
     var totalAmount: Int
     
@@ -35,7 +36,6 @@ class ListItem: Identifiable {
         self.totalAmount = totalAmount
     }
     
-
 }
 
 extension ListItem {

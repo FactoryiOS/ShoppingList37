@@ -53,6 +53,7 @@ struct CreateEditListView: View {
                         placeholder: TextConstants.placeholder,
                         subtitle: ""
                     )
+                    .padding(.horizontal, 16)
                     
                     ColorSelector(
                         selectedColor: $selectedColor,
@@ -68,10 +69,16 @@ struct CreateEditListView: View {
             }
             BaseButton(
                 title: isEditMode ? TextConstants.saveButton : TextConstants.createButton,
-                isActive: !insertString.isEmpty && selectedIcon != nil && selectedColor != nil
+                isActive: !insertString.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+                && selectedIcon != nil
+                && selectedColor != nil
             ) {
                 guard let selectedColor, let selectedIcon else { return }
-                
+                if isEditMode {
+                    existingList?.name = insertString
+                    existingList?.color = selectedColor
+                    existingList?.icon = selectedIcon
+                } else {
                     let newList = ListItem(
                         name: insertString,
                         color: selectedColor,
@@ -79,11 +86,6 @@ struct CreateEditListView: View {
                         items: [],
                         totalAmount: 0
                     )
-                if isEditMode {
-                    existingList?.name = newList.name
-                    existingList?.color = newList.color
-                    existingList?.icon = newList.icon
-                } else {
                     modelContext.insert(newList)
                 }
                 

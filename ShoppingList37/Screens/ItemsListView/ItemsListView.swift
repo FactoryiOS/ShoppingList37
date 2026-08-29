@@ -13,7 +13,7 @@ struct ItemsListView: View {
     @State private var searchText = ""
     @State private var isShowingCreateSheet = false
     @Environment(\.modelContext) var modelContext
-    var list: ListItem
+    let list: ListItem
 
     private var filteredItems: [ShoppingItem] {
         guard !searchText.isEmpty else {
@@ -73,9 +73,9 @@ struct ItemsListView: View {
             .padding(.vertical, 12)
         }
         .sheet(isPresented: $isShowingCreateSheet) {
-            ProductView(mode: .create, list: list)
+            ProductView(mode: .create, list: list, existingItem: nil)
         }
-        .sheet(item: $selectedItem){ unwrappedItem in
+        .sheet(item: $selectedItem) {unwrappedItem in
             ProductView(mode: .edit, list: list, existingItem: unwrappedItem)
         }
     }

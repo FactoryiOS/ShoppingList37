@@ -15,10 +15,9 @@ enum ProductMode {
 
 struct ProductView: View {
     let mode: ProductMode
-    var list: ListItem
-    var existingItem: ShoppingItem?
+    let list: ListItem
+    let existingItem: ShoppingItem?
     
-    @Environment(\.modelContext) var modelContext
     @Environment(\.dismiss) var dismiss
 
     @State private var productName = ""
@@ -152,7 +151,7 @@ struct ProductView: View {
 }
 
 #Preview("Создание") {
-    ProductView(mode: .create, list: .mock)
+    ProductView(mode: .create, list: .mock, existingItem: nil)
 }
 
 #Preview("Редактирование") {
