@@ -18,12 +18,17 @@ struct ProductView: View {
     let list: ListItem
     let existingItem: ShoppingItem?
     
+    @Query private var allLists: [ListItem]
     @Environment(\.dismiss) var dismiss
 
     @State private var productName = ""
     @State private var productCount = ""
     @State private var unitOfMeasurement: MeasurementUnit? = MeasurementUnit.piece
     @State private var unitOfMeasurementName: String = "шт"
+    
+    private var allHistoricalItems: [String] {
+        Array(Set(allLists.flatMap { $0.items }.map { $0.title }))
+    }
     
     var body: some View {
         ZStack {
