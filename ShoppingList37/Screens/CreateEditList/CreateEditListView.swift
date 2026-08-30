@@ -17,16 +17,16 @@ private enum TextConstants {
 }
 
 struct CreateEditListView: View {
-    
+
     var existingList: ListItem?
-    
+
     @Environment(\.modelContext) var modelContext
-    @Environment(\.dismiss) var dismiss
-    
+    @Environment(NavigationRoute.self) private var router
+
     @State private var insertString: String = ""
     @State private var selectedColor: ColorOption?
     @State private var selectedIcon: PickerIcon?
-    
+
     init(
         existingList: ListItem? = nil,
         initialString: String = "",
@@ -38,11 +38,11 @@ struct CreateEditListView: View {
         _selectedColor = State(initialValue: initialColor)
         _selectedIcon = State(initialValue: initialIcon)
     }
-    
+
     private var isEditMode: Bool {
         existingList != nil
     }
-    
+
     var body: some View {
         VStack(spacing: 0) {
             ScrollView {
@@ -54,26 +54,44 @@ struct CreateEditListView: View {
                         subtitle: ""
                     )
                     .padding(.horizontal, 16)
-                    
+
                     ColorSelector(
                         selectedColor: $selectedColor,
-                        colorSectionText: isEditMode ? ColorSectionText.edit.rawValue : ColorSectionText.create.rawValue
+                        colorSectionText: isEditMode
+                            ? ColorSectionText.edit.rawValue
+                            : ColorSectionText.create.rawValue
                     )
-                    .clipShape(RoundedRectangle(cornerRadius: 12))
+                    .clipShape(
+                        RoundedRectangle(cornerRadius: 12)
+                    )
                     .padding(.horizontal, 16)
-                    
-                    IconPickerView(selectedIcon: $selectedIcon, selectionColor: selectedColor?.color ?? ColorOption.blue.color)
-                        .padding(.horizontal, 16)
-                    
+
+                    IconPickerView(
+                        selectedIcon: $selectedIcon,
+                        selectionColor: selectedColor?.color
+                            ?? ColorOption.blue.color
+                    )
+                    .padding(.horizontal, 16)
                 }
             }
+
             BaseButton(
-                title: isEditMode ? TextConstants.saveButton : TextConstants.createButton,
-                isActive: !insertString.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
-                && selectedIcon != nil
-                && selectedColor != nil
+                title: isEditMode
+                    ? TextConstants.saveButton
+                    : TextConstants.createButton,
+                isActive: !insertString
+                    .trimmingCharacters(
+                        in: .whitespacesAndNewlines
+                    )
+                    .isEmpty
+                    && selectedIcon != nil
+                    && selectedColor != nil
             ) {
-                guard let selectedColor, let selectedIcon else { return }
+                guard let selectedColor,
+                      let selectedIcon else {
+                    return
+                }
+
                 if isEditMode {
                     existingList?.name = insertString
                     existingList?.color = selectedColor
@@ -86,25 +104,35 @@ struct CreateEditListView: View {
                         items: [],
                         totalAmount: 0
                     )
+
                     modelContext.insert(newList)
                 }
-                
-                dismiss()
+
+                router.pop()
             }
             .padding(.bottom, 20)
         }
-        .navigationTitle(isEditMode ? TextConstants.editTitle : TextConstants.createTitle)
+        .navigationTitle(
+            isEditMode
+                ? TextConstants.editTitle
+                : TextConstants.createTitle
+        )
         .navigationBarTitleDisplayMode(.inline)
         .background(Color.Colors.backgroundMain)
-        
     }
 }
 
-#Preview ("Create list") {
+#Preview("Create list") {
     NavigationStack {
         CreateEditListView()
     }
+    .environment(NavigationRoute())
+    .modelContainer(
+        for: ListItem.self,
+        inMemory: true
+    )
 }
+
 #Preview("Edit list") {
     NavigationStack {
         CreateEditListView(
@@ -114,4 +142,9 @@ struct CreateEditListView: View {
             initialIcon: PickerIcon.airplane
         )
     }
+    .environment(NavigationRoute())
+    .modelContainer(
+        for: ListItem.self,
+        inMemory: true
+    )
 }
