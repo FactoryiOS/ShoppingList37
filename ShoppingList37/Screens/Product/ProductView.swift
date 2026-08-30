@@ -30,6 +30,10 @@ struct ProductView: View {
         Array(Set(allLists.flatMap { $0.items }.map { $0.title }))
     }
     
+    private var filteredSuggestions: [String] {
+        productName.isEmpty ? [] : allHistoricalItems.filter { $0.localizedStandardContains(productName)}
+    }
+    
     var body: some View {
         ZStack {
             Color.Colors.backgroundMain.ignoresSafeArea()
@@ -78,6 +82,20 @@ struct ProductView: View {
                 .padding(.top, 8)
                 .padding(.horizontal, 16)
                 
+                if !filteredSuggestions.isEmpty {
+                    VStack {
+                        ForEach(filteredSuggestions, id: \.self) { suggestion in
+                            Text("\(suggestion)")
+                            Divider()
+                        }
+                    }
+                    .padding()
+                    .background(Color.Colors.backgroundSecondary)
+                    .cornerRadius(12)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .padding(.horizontal)
+                }
+
                 HStack(spacing: 16) {
                     InsertTextField(
                         insertString: $productCount,
@@ -157,6 +175,7 @@ struct ProductView: View {
 
 #Preview("Создание") {
     ProductView(mode: .create, list: .mock, existingItem: nil)
+        .modelContainer(for: ListItem.self, inMemory: true)
 }
 
 #Preview("Редактирование") {
