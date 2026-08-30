@@ -51,7 +51,7 @@ struct ProductView: View {
         )
 
         _unitOfMeasurementName = State(
-            initialValue: existingItem?.unit.rawValue ?? "шт"
+            initialValue: existingItem?.unit.rawValue ?? MeasurementUnit.piece.rawValue
         )
     }
 
@@ -100,8 +100,8 @@ struct ProductView: View {
                 InsertTextField(
                     insertString: $productName,
                     isError: false,
-                    placeholder: "Название товара",
-                    subtitle: "Такой товар уже есть"
+                    placeholder: String(localized: "Название товара"),
+                    subtitle: String(localized: "Такой товар уже есть")
                 )
                 .padding(.top, 8)
                 .padding(.horizontal, 16)
@@ -110,7 +110,7 @@ struct ProductView: View {
                     InsertTextField(
                         insertString: $productCount,
                         isError: false,
-                        placeholder: "Количество",
+                        placeholder: String(localized: "Количество"),
                         subtitle: ""
                     )
                     .onChange(
@@ -125,7 +125,7 @@ struct ProductView: View {
                     InsertTextField(
                         insertString: $unitOfMeasurementName,
                         isError: false,
-                        placeholder: "Ед. изм.",
+                        placeholder: String(localized: "Ед. изм."),
                         subtitle: ""
                     )
                     .onChange(
@@ -150,10 +150,10 @@ struct ProductView: View {
     private var title: String {
         switch mode {
         case .create:
-            return "Создание товара"
+            return String(localized: "Создание товара")
 
         case .edit:
-            return "Редактировать"
+            return String(localized: "Редактировать")
         }
     }
 
@@ -220,9 +220,7 @@ struct ProductView: View {
             return
         }
 
-        let units = MeasurementUnit.allCases.filter {
-            measurement in
-
+        let units = MeasurementUnit.allCases.filter { measurement in
             measurement.rawValue
                 .lowercased()
                 .hasPrefix(

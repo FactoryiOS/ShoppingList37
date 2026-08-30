@@ -16,11 +16,11 @@ enum MeasurementUnit: String, CaseIterable, Codable {
     
     var short: String {
         switch self {
-        case .piece: "шт"
-        case .kilogram: "кг"
-        case .gram: "г"
-        case .liter: "л"
-        case .milliliter: "мл"
+        case .piece: return String(localized: "шт")
+        case .kilogram: return String(localized: "кг")
+        case .gram: return String(localized: "г")
+        case .liter: return String(localized: "л")
+        case .milliliter: return String(localized: "мл")
         }
     }
 }

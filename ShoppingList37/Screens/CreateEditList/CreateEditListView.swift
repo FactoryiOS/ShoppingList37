@@ -9,11 +9,11 @@ import SwiftUI
 import SwiftData
 
 private enum TextConstants {
-    static let createTitle = "Создать список"
-    static let editTitle = "Редактировать список"
-    static let placeholder = "Введите название списка"
-    static let createButton = "Создать"
-    static let saveButton = "Сохранить"
+    static let createTitle: LocalizedStringResource = "Создать список"
+    static let editTitle: LocalizedStringResource = "Редактировать список"
+    static let placeholder: LocalizedStringResource = "Введите название списка"
+    static let createButton: LocalizedStringResource = "Создать"
+    static let saveButton: LocalizedStringResource = "Сохранить"
 }
 
 struct CreateEditListView: View {
@@ -50,7 +50,7 @@ struct CreateEditListView: View {
                     InsertTextField(
                         insertString: $insertString,
                         isError: false,
-                        placeholder: TextConstants.placeholder,
+                        placeholder: String(localized: TextConstants.placeholder),
                         subtitle: ""
                     )
                     .padding(.horizontal, 16)
@@ -58,8 +58,8 @@ struct CreateEditListView: View {
                     ColorSelector(
                         selectedColor: $selectedColor,
                         colorSectionText: isEditMode
-                            ? ColorSectionText.edit.rawValue
-                            : ColorSectionText.create.rawValue
+                            ? ColorSectionText.edit.title
+                            : ColorSectionText.create.title
                     )
                     .clipShape(
                         RoundedRectangle(cornerRadius: 12)
@@ -77,8 +77,8 @@ struct CreateEditListView: View {
 
             BaseButton(
                 title: isEditMode
-                    ? TextConstants.saveButton
-                    : TextConstants.createButton,
+                ? String(localized: TextConstants.saveButton)
+                    : String(localized: TextConstants.createButton),
                 isActive: !insertString
                     .trimmingCharacters(
                         in: .whitespacesAndNewlines

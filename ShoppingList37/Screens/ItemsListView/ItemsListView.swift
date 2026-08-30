@@ -81,7 +81,7 @@ struct ItemsListView: View {
             )
 
             BaseButton(
-                title: "Добавить товар"
+                title: String(localized: "Добавить товар")
             ) {
                 router.selectedList = list
                 router.selectedItem = nil

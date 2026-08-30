@@ -27,7 +27,7 @@ struct WelcomeScreen: View {
             
             Spacer()
             
-            BaseButton(title: TextConstants.startButton, isActive: true) {
+            BaseButton(title: String(localized: TextConstants.startButton), isActive: true) {
                 onComplete()
             }
             .padding(.bottom, 20)
@@ -37,11 +37,11 @@ struct WelcomeScreen: View {
 }
 
 private enum TextConstants {
-    static let welcomeTitle = "Добро пожаловать!"
-    static let description = "Никогда не забывайте, что нужно купить"
-    static let createLists = "Создавайте списки"
-    static let doNotWorry = "и не переживайте о покупках"
-    static let startButton = "Начать"
+    static let welcomeTitle: LocalizedStringResource = "Добро пожаловать!"
+    static let description: LocalizedStringResource = "Никогда не забывайте, что нужно купить"
+    static let createLists: LocalizedStringResource = "Создавайте списки"
+    static let doNotWorry: LocalizedStringResource = "и не переживайте о покупках"
+    static let startButton: LocalizedStringResource = "Начать"
 }
 
 #Preview {

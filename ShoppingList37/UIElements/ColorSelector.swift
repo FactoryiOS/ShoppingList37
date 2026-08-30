@@ -7,15 +7,22 @@
 
 import SwiftUI
 
-enum ColorSectionText: String {
-    case create = "Выберите цвет"
-    case edit = "Цвет"
+enum ColorSectionText {
+    case create
+    case edit
+    
+    var title: LocalizedStringResource {
+        switch self {
+        case .create: return "Выберите цвет"
+        case .edit: return "Цвет"
+        }
+    }
 }
 
 struct ColorSelector: View {
     @Binding var selectedColor: ColorOption?
     
-    var colorSectionText: String
+    var colorSectionText: LocalizedStringResource
     
     var body: some View {
         VStack(spacing: 12) {
@@ -53,11 +60,11 @@ struct ColorSelector: View {
 #Preview("Create list") {
     ColorSelector(
         selectedColor: .constant(nil),
-        colorSectionText: ColorSectionText.create.rawValue)
+        colorSectionText: ColorSectionText.create.title)
 }
 
 #Preview("Edit list") {
     ColorSelector(
         selectedColor: .constant(nil),
-        colorSectionText: ColorSectionText.edit.rawValue)
+        colorSectionText: ColorSectionText.edit.title)
 }

@@ -95,7 +95,7 @@ struct MainListsView: View {
 
                                     Button {
                                         let newItem = ListItem(
-                                            name: "\(list.name) (Копия)",
+                                            name: String(format: String(localized: "%@ (Копия)"), list.name),
                                             color: list.color,
                                             icon: list.icon,
                                             items: list.items.map { oldItem in
@@ -133,7 +133,7 @@ struct MainListsView: View {
             Spacer()
 
             BaseButton(
-                title: "Создать список",
+                title: String(localized: "Создать список"),
                 isActive: true
             ) {
                 router.push(.createList)
