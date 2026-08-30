@@ -7,7 +7,7 @@
 
 import Foundation
 
-enum MeasurementUnit: String, CaseIterable {
+enum MeasurementUnit: String, CaseIterable, Codable {
     case piece = "шт"
     case kilogram = "кг"
     case gram = "г"

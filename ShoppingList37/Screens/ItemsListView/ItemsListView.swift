@@ -6,20 +6,23 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct ItemsListView: View {
 
+    @State private var searchText = ""
+
+    @Environment(\.modelContext) var modelContext
     @Environment(NavigationRoute.self) private var router
 
-    @State private var items = ShoppingItem.itemsMock
-    @State private var searchText = ""
+    let list: ListItem
 
     private var filteredItems: [ShoppingItem] {
         guard !searchText.isEmpty else {
-            return items
+            return list.items
         }
 
-        return items.filter {
+        return list.items.filter {
             $0.title.localizedCaseInsensitiveContains(searchText)
         }
     }
@@ -27,18 +30,18 @@ struct ItemsListView: View {
     var body: some View {
         VStack(spacing: 0) {
             List {
-                ForEach($items) { $item in
-                    ShoppingItemCell(item: $item)
+                ForEach(filteredItems) { item in
+                    ShoppingItemCell(item: item)
                         .contentShape(Rectangle())
                         .onTapGesture {
-                            router.showModal(.editProduct)
+                            item.isPurchased.toggle()
                         }
                         .swipeActions(
                             edge: .trailing,
                             allowsFullSwipe: false
                         ) {
                             Button(role: .destructive) {
-
+                                modelContext.delete(item)
                             } label: {
                                 Label(
                                     "",
@@ -47,6 +50,8 @@ struct ItemsListView: View {
                             }
 
                             Button {
+                                router.selectedList = list
+                                router.selectedItem = item
                                 router.showModal(.editProduct)
                             } label: {
                                 Label(
@@ -69,13 +74,17 @@ struct ItemsListView: View {
             .listStyle(.plain)
             .searchable(
                 text: $searchText,
-                placement: .navigationBarDrawer(displayMode: .always),
+                placement: .navigationBarDrawer(
+                    displayMode: .always
+                ),
                 prompt: "Поиск"
             )
 
             BaseButton(
                 title: "Добавить товар"
             ) {
+                router.selectedList = list
+                router.selectedItem = nil
                 router.showModal(.createProduct)
             }
             .padding(.horizontal, 16)
@@ -86,7 +95,11 @@ struct ItemsListView: View {
 
 #Preview {
     NavigationStack {
-        ItemsListView()
+        ItemsListView(list: .mock)
+            .modelContainer(
+                for: ListItem.self,
+                inMemory: true
+            )
     }
     .environment(NavigationRoute())
 }

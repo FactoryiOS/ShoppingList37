@@ -5,7 +5,6 @@
 //  Created by Андрей Урсан on 29.08.2026.
 //
 
-import Foundation
 import Observation
 
 @MainActor
@@ -16,7 +15,6 @@ final class NavigationRoute {
 
     enum Route: Hashable, Identifiable {
         case createList
-        case editList(listID: UUID)
         case itemsList
         case createProduct
         case editProduct
@@ -25,9 +23,6 @@ final class NavigationRoute {
             switch self {
             case .createList:
                 return "createList"
-
-            case .editList(let listID):
-                return "editList_\(listID)"
 
             case .itemsList:
                 return "itemsList"
@@ -45,6 +40,9 @@ final class NavigationRoute {
 
     var navigationPath: [Route] = []
     var presentingSheet: Route?
+
+    var selectedList: ListItem?
+    var selectedItem: ShoppingItem?
 
     // MARK: - Navigation
 
@@ -66,5 +64,10 @@ final class NavigationRoute {
 
     func showModal(_ route: Route) {
         presentingSheet = route
+    }
+
+    func dismissModal() {
+        presentingSheet = nil
+        selectedItem = nil
     }
 }

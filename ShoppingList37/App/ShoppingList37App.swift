@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import SwiftData
 
 @main
 struct ShoppingList37App: App {
@@ -41,5 +42,6 @@ struct ShoppingList37App: App {
             }
             .preferredColorScheme(colorScheme)
         }
+        .modelContainer(for: ListItem.self)
     }
 }

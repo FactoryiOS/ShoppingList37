@@ -5,12 +5,14 @@
 //  Created by Kristina Kostenko on 26.08.26.
 //
 import SwiftUI
+import SwiftData
 
 struct MainListsView: View {
 
-    @Environment(NavigationRoute.self) private var router
+    @Query private var lists: [ListItem]
 
-    @State private var lists: [ListItem]
+    @Environment(\.modelContext) var modelContext
+    @Environment(NavigationRoute.self) private var router
 
     @AppStorage("appScheme")
     private var appScheme = AppScheme.system.rawValue
@@ -56,10 +58,6 @@ struct MainListsView: View {
         }
     }
 
-    init(initialLists: [ListItem] = ListItem.mocks) {
-        _lists = State(initialValue: initialLists)
-    }
-
     var body: some View {
         VStack {
             Group {
@@ -71,6 +69,7 @@ struct MainListsView: View {
                             ListCellView(item: list)
                                 .contentShape(Rectangle())
                                 .onTapGesture {
+                                    router.selectedList = list
                                     router.push(.itemsList)
                                 }
                                 .listRowBackground(Color.clear)
@@ -83,6 +82,40 @@ struct MainListsView: View {
                                         trailing: 16
                                     )
                                 )
+                                .swipeActions(
+                                    edge: .trailing,
+                                    allowsFullSwipe: false
+                                ) {
+                                    Button(role: .destructive) {
+                                        modelContext.delete(list)
+                                    } label: {
+                                        Image(systemName: "trash")
+                                    }
+                                    .tint(.red)
+
+                                    Button {
+                                        let newItem = ListItem(
+                                            name: "\(list.name) (Копия)",
+                                            color: list.color,
+                                            icon: list.icon,
+                                            items: list.items.map { oldItem in
+                                                ShoppingItem(
+                                                    title: oldItem.title,
+                                                    count: oldItem.count,
+                                                    unit: oldItem.unit
+                                                )
+                                            },
+                                            totalAmount: list.totalAmount
+                                        )
+
+                                        modelContext.insert(newItem)
+                                    } label: {
+                                        Image(
+                                            systemName: "plus.square.on.square"
+                                        )
+                                    }
+                                    .tint(.orange)
+                                }
                         }
                     }
                     .padding(.top, 12)
@@ -113,14 +146,11 @@ struct MainListsView: View {
 
 #Preview("Empty") {
     NavigationStack {
-        MainListsView(initialLists: [])
-    }
-    .environment(NavigationRoute())
-}
-
-#Preview("Data") {
-    NavigationStack {
-        MainListsView(initialLists: ListItem.mocks)
+        MainListsView()
+            .modelContainer(
+                for: ListItem.self,
+                inMemory: true
+            )
     }
     .environment(NavigationRoute())
 }

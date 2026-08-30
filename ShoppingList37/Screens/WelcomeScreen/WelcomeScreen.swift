@@ -45,7 +45,7 @@ private enum TextConstants {
 }
 
 #Preview {
-    WelcomeScreen() {
+    WelcomeScreen {
         print("Button clicked!")
     }
 }

@@ -14,7 +14,9 @@ struct RouteView: View {
     var body: some View {
         NavigationStack(path: $router.navigationPath) {
             MainListsView()
-                .navigationDestination(for: NavigationRoute.Route.self) { route in
+                .navigationDestination(
+                    for: NavigationRoute.Route.self
+                ) { route in
                     getScreen(for: route)
                 }
         }
@@ -25,22 +27,36 @@ struct RouteView: View {
     }
 
     @ViewBuilder
-    private func getScreen(for route: NavigationRoute.Route) -> some View {
+    private func getScreen(
+        for route: NavigationRoute.Route
+    ) -> some View {
         switch route {
         case .createList:
             CreateEditListView()
 
-        case .editList(let listID):
-            CreateEditListView(existingListId: listID)
-
         case .itemsList:
-            ItemsListView()
+            if let list = router.selectedList {
+                ItemsListView(list: list)
+            }
 
         case .createProduct:
-            ProductView(mode: .create)
+            if let list = router.selectedList {
+                ProductView(
+                    mode: .create,
+                    list: list,
+                    existingItem: nil
+                )
+            }
 
         case .editProduct:
-            ProductView(mode: .edit)
+            if let list = router.selectedList,
+               let item = router.selectedItem {
+                ProductView(
+                    mode: .edit,
+                    list: list,
+                    existingItem: item
+                )
+            }
         }
     }
 }

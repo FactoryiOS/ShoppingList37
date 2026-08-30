@@ -6,9 +6,11 @@
 //
 
 import Foundation
+import SwiftData
 
-struct ShoppingItem: Identifiable {
-    let id: UUID
+@Model
+class ShoppingItem: Identifiable {
+    var id: UUID
     var title: String
     var count: Int
     var unit: MeasurementUnit
