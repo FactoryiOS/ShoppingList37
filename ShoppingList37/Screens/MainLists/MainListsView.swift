@@ -8,25 +8,29 @@ import SwiftUI
 import SwiftData
 
 struct MainListsView: View {
-    
+
     @Query private var lists: [ListItem]
+
     @Environment(\.modelContext) var modelContext
-    @State private var isShowingCreateSheet = false
+    @Environment(NavigationRoute.self) private var router
+
     @AppStorage("appScheme")
-    
     private var appScheme = AppScheme.system.rawValue
-    
+
     private var selectedScheme: AppScheme {
         AppScheme(rawValue: appScheme) ?? .system
     }
+
     private var themeIcon: String {
         switch selectedScheme {
         case .dark:
             return "circle.lefthalf.filled"
+
         case .light, .system:
             return "circle.righthalf.filled"
         }
     }
+
     private var navigationMenu: some View {
         Menu {
             Menu {
@@ -36,7 +40,7 @@ struct MainListsView: View {
                     } label: {
                         HStack {
                             Text(scheme.title)
-                            
+
                             if selectedScheme == scheme {
                                 Image(systemName: "checkmark")
                             }
@@ -44,116 +48,109 @@ struct MainListsView: View {
                     }
                 }
             } label: {
-                Label("Установить тему", systemImage: themeIcon)
+                Label(
+                    "Установить тему",
+                    systemImage: themeIcon
+                )
             }
         } label: {
             Image(systemName: "ellipsis.circle")
         }
     }
-    
+
     var body: some View {
-        NavigationStack {
-            VStack {
-                Group {
-                    if lists.isEmpty {
-                        PlaceholderView(state: .mainScreen)
-                    } else {
-                        List {
-                            ForEach(lists) { list in
-                                ListCellView(item: list)
-                                    .listRowBackground(Color.clear)
-                                    .listRowSeparator(.hidden)
-                                    .listRowInsets(
-                                        EdgeInsets(
-                                            top: 6,
-                                            leading: 16,
-                                            bottom: 6,
-                                            trailing: 16
-                                        )
+        VStack {
+            Group {
+                if lists.isEmpty {
+                    PlaceholderView(state: .mainScreen)
+                } else {
+                    List {
+                        ForEach(lists) { list in
+                            ListCellView(item: list)
+                                .contentShape(Rectangle())
+                                .onTapGesture {
+                                    router.selectedList = list
+                                    router.push(.itemsList)
+                                }
+                                .listRowBackground(Color.clear)
+                                .listRowSeparator(.hidden)
+                                .listRowInsets(
+                                    EdgeInsets(
+                                        top: 6,
+                                        leading: 16,
+                                        bottom: 6,
+                                        trailing: 16
                                     )
-                                    .swipeActions(edge: .trailing, allowsFullSwipe: false) {
-                                        Button(role: .destructive) {
-                                            modelContext.delete(list)
-                                        } label: {
-                                            Image(systemName: "trash")
-                                        }
-                                        .tint(.red)
-                                        
-                                        Button {
-                                            let newItem = ListItem(
-                                                name: "\(list.name) (Копия)",
-                                                color: list.color,
-                                                icon: list.icon,
-                                                items: list.items.map { oldItem in
-                                                    ShoppingItem(
-                                                        title: oldItem.title,
-                                                        count: oldItem.count,
-                                                        unit: oldItem.unit
-                                                    )
-                                                },
-                                                totalAmount: list.totalAmount
-                                            )
-                                            modelContext.insert(newItem)
-                                        } label: {
-                                            Image(systemName: "plus.square.on.square")
-                                        }
-                                        .tint(.orange)
+                                )
+                                .swipeActions(
+                                    edge: .trailing,
+                                    allowsFullSwipe: false
+                                ) {
+                                    Button(role: .destructive) {
+                                        modelContext.delete(list)
+                                    } label: {
+                                        Image(systemName: "trash")
                                     }
-                            }
-                            
+                                    .tint(.red)
+
+                                    Button {
+                                        let newItem = ListItem(
+                                            name: "\(list.name) (Копия)",
+                                            color: list.color,
+                                            icon: list.icon,
+                                            items: list.items.map { oldItem in
+                                                ShoppingItem(
+                                                    title: oldItem.title,
+                                                    count: oldItem.count,
+                                                    unit: oldItem.unit
+                                                )
+                                            },
+                                            totalAmount: list.totalAmount
+                                        )
+
+                                        modelContext.insert(newItem)
+                                    } label: {
+                                        Image(
+                                            systemName: "plus.square.on.square"
+                                        )
+                                    }
+                                    .tint(.orange)
+                                }
                         }
-                        .padding(.top, 12)
-                        .listStyle(.plain)
-                        .scrollContentBackground(.hidden)
                     }
-                }
-                .navigationTitle("Мои списки")
-                .toolbar {
-                    ToolbarItem(placement: .topBarTrailing) {
-                        navigationMenu
-                    }
-                }
-                
-                Spacer()
-                
-                BaseButton(title: "Создать список", isActive: true) {
-                    isShowingCreateSheet = true
-                }
-                .padding(.bottom, 20)
-                .sheet(isPresented: $isShowingCreateSheet) {
-                    NavigationStack {
-                        CreateEditListView()
-                    }
+                    .padding(.top, 12)
+                    .listStyle(.plain)
+                    .scrollContentBackground(.hidden)
                 }
             }
-            .background(Color.Colors.backgroundMain)
+            .navigationTitle("Мои списки")
+            .toolbar {
+                ToolbarItem(placement: .topBarTrailing) {
+                    navigationMenu
+                }
+            }
+
+            Spacer()
+
+            BaseButton(
+                title: "Создать список",
+                isActive: true
+            ) {
+                router.push(.createList)
+            }
+            .padding(.bottom, 20)
         }
+        .background(Color.Colors.backgroundMain)
     }
 }
 
 #Preview("Empty") {
     NavigationStack {
         MainListsView()
-            .modelContainer(for: ListItem.self, inMemory: true)
-    }
-}
-
-#Preview("Data") {
-    let previewContainer: ModelContainer = {
-        do {
-            let container = try ModelContainer(
+            .modelContainer(
                 for: ListItem.self,
-                configurations: ModelConfiguration(isStoredInMemoryOnly: true)
+                inMemory: true
             )
-            for list in ListItem.mocks {
-                container.mainContext.insert(list)
-            }
-            return container
-        } catch {
-            fatalError("Не удалось создать превью-контейнер: \(error)")
-        }
-    }()
-    
-    return MainListsView()
-        .modelContainer(previewContainer)
+    }
+    .environment(NavigationRoute())
 }

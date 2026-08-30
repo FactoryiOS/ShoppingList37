@@ -9,41 +9,55 @@ import SwiftUI
 import SwiftData
 
 struct ItemsListView: View {
-    @State private var selectedItem: ShoppingItem?
+
     @State private var searchText = ""
-    @State private var isShowingCreateSheet = false
+
     @Environment(\.modelContext) var modelContext
+    @Environment(NavigationRoute.self) private var router
+
     let list: ListItem
 
     private var filteredItems: [ShoppingItem] {
         guard !searchText.isEmpty else {
             return list.items
         }
-        
+
         return list.items.filter {
             $0.title.localizedCaseInsensitiveContains(searchText)
         }
     }
-    
+
     var body: some View {
         VStack(spacing: 0) {
             List {
                 ForEach(filteredItems) { item in
                     ShoppingItemCell(item: item)
+                        .contentShape(Rectangle())
                         .onTapGesture {
                             item.isPurchased.toggle()
                         }
-                        .swipeActions(edge: .trailing, allowsFullSwipe: false) {
+                        .swipeActions(
+                            edge: .trailing,
+                            allowsFullSwipe: false
+                        ) {
                             Button(role: .destructive) {
                                 modelContext.delete(item)
                             } label: {
-                                Label("", systemImage: "trash")
+                                Label(
+                                    "",
+                                    systemImage: "trash"
+                                )
                             }
-                            
+
                             Button {
-                                selectedItem = item
+                                router.selectedList = list
+                                router.selectedItem = item
+                                router.showModal(.editProduct)
                             } label: {
-                                Label("", systemImage: "square.and.pencil")
+                                Label(
+                                    "",
+                                    systemImage: "square.and.pencil"
+                                )
                             }
                             .tint(.Colors.swipeLightGrey)
                         }
@@ -60,23 +74,21 @@ struct ItemsListView: View {
             .listStyle(.plain)
             .searchable(
                 text: $searchText,
-                placement: .navigationBarDrawer(displayMode: .always),
+                placement: .navigationBarDrawer(
+                    displayMode: .always
+                ),
                 prompt: "Поиск"
             )
-            
+
             BaseButton(
                 title: "Добавить товар"
             ) {
-               isShowingCreateSheet = true
+                router.selectedList = list
+                router.selectedItem = nil
+                router.showModal(.createProduct)
             }
             .padding(.horizontal, 16)
             .padding(.vertical, 12)
-        }
-        .sheet(isPresented: $isShowingCreateSheet) {
-            ProductView(mode: .create, list: list, existingItem: nil)
-        }
-        .sheet(item: $selectedItem) {unwrappedItem in
-            ProductView(mode: .edit, list: list, existingItem: unwrappedItem)
         }
     }
 }
@@ -84,6 +96,10 @@ struct ItemsListView: View {
 #Preview {
     NavigationStack {
         ItemsListView(list: .mock)
-            .modelContainer(for: ListItem.self, inMemory: true)
+            .modelContainer(
+                for: ListItem.self,
+                inMemory: true
+            )
     }
+    .environment(NavigationRoute())
 }
