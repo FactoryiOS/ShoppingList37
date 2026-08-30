@@ -8,9 +8,9 @@
 import SwiftUI
 
 struct RouteView: View {
-
+    
     @State private var router = NavigationRoute()
-
+    
     var body: some View {
         NavigationStack(path: $router.navigationPath) {
             MainListsView()
@@ -25,7 +25,7 @@ struct RouteView: View {
         }
         .environment(router)
     }
-
+    
     @ViewBuilder
     private func getScreen(
         for route: NavigationRoute.Route
@@ -33,12 +33,21 @@ struct RouteView: View {
         switch route {
         case .createList:
             CreateEditListView()
-
+            
+        case .editList:
+            if let list = router.selectedList {
+                CreateEditListView(
+                    existingList: list,
+                    initialString: list.name,
+                    initialColor: list.color,
+                    initialIcon: list.icon
+                )
+            }
         case .itemsList:
             if let list = router.selectedList {
                 ItemsListView(list: list)
             }
-
+            
         case .createProduct:
             if let list = router.selectedList {
                 ProductView(
@@ -47,7 +56,7 @@ struct RouteView: View {
                     existingItem: nil
                 )
             }
-
+            
         case .editProduct:
             if let list = router.selectedList,
                let item = router.selectedItem {

@@ -15,6 +15,7 @@ final class NavigationRoute {
 
     enum Route: Hashable, Identifiable {
         case createList
+        case editList
         case itemsList
         case createProduct
         case editProduct
@@ -23,7 +24,8 @@ final class NavigationRoute {
             switch self {
             case .createList:
                 return "createList"
-
+            case .editList:
+                return "editList"
             case .itemsList:
                 return "itemsList"
 
