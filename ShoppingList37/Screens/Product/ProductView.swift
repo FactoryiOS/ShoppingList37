@@ -18,7 +18,7 @@ struct ProductView: View {
     let mode: ProductMode
     let list: ListItem
     let existingItem: ShoppingItem?
-    @Query private var allLists: [ListItem]
+    @Query private var allItems: [ShoppingItem]
     
     @Environment(\.modelContext) private var modelContext
     @Environment(NavigationRoute.self) private var router
@@ -59,7 +59,12 @@ struct ProductView: View {
     }
     
     private var allHistoricalItems: [String] {
-        Array(Set(allLists.flatMap { $0.items }.map { $0.title }))
+        let normalizedTitles = allItems.map { item in
+            item.title
+                .trimmingCharacters(in: .whitespacesAndNewlines)
+                .capitalized
+        }
+        return Array(Set(normalizedTitles)).sorted()
     }
     
     private var filteredSuggestions: [String] {
