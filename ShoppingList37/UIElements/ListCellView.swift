@@ -8,20 +8,19 @@
 import SwiftUI
 
 struct ListCellView: View {
-
     let item: ListItem
-
+    
     var body: some View {
         HStack(spacing: 12) {
             avatarField
-
+            
             Text(item.name)
                 .font(.title3.weight(.semibold))
                 .foregroundStyle(Color.Colors.textPrimary)
                 .lineLimit(1)
-
+            
             Spacer()
-
+            
             counterField
         }
         .padding(.horizontal, 16)
@@ -33,14 +32,13 @@ struct ListCellView: View {
             RoundedRectangle(cornerRadius: 16)
         )
     }
-
+    
     // MARK: - Avatar
-
     private var avatarField: some View {
         ZStack {
             Circle()
                 .fill(item.color.color)
-
+            
             item.icon.image
                 .resizable()
                 .scaledToFit()
@@ -49,17 +47,16 @@ struct ListCellView: View {
         }
         .frame(width: 48, height: 48)
     }
-
+    
     // MARK: - Counter
-
     private var counterField: some View {
         HStack(spacing: 1) {
             Text("\(item.amount)")
                 .font(.body)
-
+            
             Text("/")
                 .font(.body)
-
+            
             Text("\(item.totalAmount)")
                 .font(.headline)
         }
@@ -73,7 +70,7 @@ struct ListCellView: View {
     ZStack {
         Color.Colors.backgroundMain
             .ignoresSafeArea()
-
+        
         ListCellView(item: .mock)
             .padding()
     }
