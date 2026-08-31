@@ -10,20 +10,17 @@ import SwiftData
 
 @main
 struct ShoppingList37App: App {
-
     @StateObject private var appState = AppState()
-
     @AppStorage("appScheme")
+    
     private var appScheme = AppScheme.system.rawValue
 
     private var colorScheme: ColorScheme? {
         switch AppScheme(rawValue: appScheme) ?? .system {
         case .light:
             return .light
-
         case .dark:
             return .dark
-
         case .system:
             return nil
         }
