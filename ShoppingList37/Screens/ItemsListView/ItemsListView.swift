@@ -63,9 +63,9 @@ struct ItemsListView: View {
                         }
                         .listRowInsets(
                             EdgeInsets(
-                                top: 8,
+                                top: 0,
                                 leading: 16,
-                                bottom: 8,
+                                bottom: 0,
                                 trailing: 16
                             )
                         )
@@ -90,6 +90,9 @@ struct ItemsListView: View {
             .padding(.horizontal, 16)
             .padding(.vertical, 12)
         }
+        .navigationTitle(list.name)
+        .navigationBarTitleDisplayMode(.inline)
+        .toolbarRole(.editor)
     }
 }
 
