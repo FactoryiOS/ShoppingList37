@@ -8,10 +8,9 @@ import SwiftUI
 import SwiftData
 
 struct MainListsView: View {
-    
     @Query private var lists: [ListItem]
     
-    @Environment(\.modelContext) var modelContext
+    @Environment(\.modelContext) private var modelContext
     @Environment(NavigationRoute.self) private var router
     
     @AppStorage("appScheme")
@@ -20,6 +19,8 @@ struct MainListsView: View {
     private var selectedScheme: AppScheme {
         AppScheme(rawValue: appScheme) ?? .system
     }
+    
+    @State private var listToDelete: ListItem?
     
     private var themeIcon: String {
         switch selectedScheme {
@@ -103,27 +104,14 @@ struct MainListsView: View {
                                     allowsFullSwipe: false
                                 ) {
                                     Button(role: .destructive) {
-                                        modelContext.delete(list)
+                                        listToDelete = list
                                     } label: {
                                         Image(systemName: "trash")
                                     }
                                     .tint(.red)
                                     
                                     Button {
-                                        let newItem = ListItem(
-                                            name: "\(list.name) (Копия)",
-                                            color: list.color,
-                                            icon: list.icon,
-                                            items: list.items.map { oldItem in
-                                                ShoppingItem(
-                                                    title: oldItem.title,
-                                                    count: oldItem.count,
-                                                    unit: oldItem.unit
-                                                )
-                                            }
-                                        )
-                                        
-                                        modelContext.insert(newItem)
+                                        duplicate(list)
                                     } label: {
                                         Image(
                                             systemName: "plus.square.on.square"
@@ -151,6 +139,54 @@ struct MainListsView: View {
         }
         .background(Color.Colors.backgroundMain)
         .toolbar(.hidden, for: .navigationBar)
+        .alert(
+            "Удаление списка",
+            isPresented: Binding(
+                get: {
+                    listToDelete != nil
+                },
+                set: { isPresented in
+                    if !isPresented {
+                        listToDelete = nil
+                    }
+                }
+            )
+        ) {
+            Button("Удалить", role: .destructive) {
+                if let list = listToDelete {
+                    delete(list)
+                }
+                
+                listToDelete = nil
+            }
+            
+            Button("Отменить", role: .cancel) {
+                listToDelete = nil
+            }
+        } message: {
+            Text("Вы действительно хотите удалить список?")
+        }
+    }
+    
+    private func delete(_ list: ListItem) {
+        modelContext.delete(list)
+    }
+    
+    private func duplicate(_ list: ListItem) {
+        let copy = ListItem(
+            name: "\(list.name) (Копия)",
+            color: list.color,
+            icon: list.icon,
+            items: list.items.map {
+                ShoppingItem(
+                    title: $0.title,
+                    count: $0.count,
+                    unit: $0.unit
+                )
+            }
+        )
+        
+        modelContext.insert(copy)
     }
 }
 
