@@ -9,11 +9,10 @@ import SwiftUI
 import SwiftData
 
 struct ItemsListView: View {
-    
     @State private var searchText = ""
     @State private var itemToDelete: ShoppingItem?
     
-    @Environment(\.modelContext) var modelContext
+    @Environment(\.modelContext) private var modelContext
     @Environment(NavigationRoute.self) private var router
     
     let list: ListItem
@@ -132,7 +131,7 @@ struct ItemsListView: View {
         do {
             try modelContext.save()
         } catch {
-            print("Ошибка удаления товара: \(error)")
+            assertionFailure("Failed to delete item: \(error)")
         }
     }
     
