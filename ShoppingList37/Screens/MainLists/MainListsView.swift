@@ -104,8 +104,7 @@ struct MainListsView: View {
                                                     count: oldItem.count,
                                                     unit: oldItem.unit
                                                 )
-                                            },
-                                            totalAmount: list.totalAmount
+                                            }
                                         )
 
                                         modelContext.insert(newItem)

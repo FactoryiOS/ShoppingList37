@@ -101,8 +101,7 @@ struct CreateEditListView: View {
                         name: insertString,
                         color: selectedColor,
                         icon: selectedIcon,
-                        items: [],
-                        totalAmount: 0
+                        items: []
                     )
 
                     modelContext.insert(newList)
