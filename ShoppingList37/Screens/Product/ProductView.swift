@@ -70,6 +70,31 @@ struct ProductView: View {
     private var filteredSuggestions: [String] {
         productName.isEmpty ? [] : allHistoricalItems.filter { $0.localizedStandardContains(productName)}
     }
+    
+    private var isDuplicateProduct: Bool {
+        let enteredName = productName
+            .trimmingCharacters(in: .whitespacesAndNewlines)
+        
+        guard !enteredName.isEmpty else {
+            return false
+        }
+        
+        return allItems.contains { item in
+            let existingTitle = item.title
+                .trimmingCharacters(in: .whitespacesAndNewlines)
+           
+            let isSameProduct = existingTitle.localizedCaseInsensitiveCompare(enteredName) == .orderedSame
+            
+            switch mode {
+            case .create:
+                return isSameProduct
+                
+            case .edit:
+                return isSameProduct && item.persistentModelID != existingItem?.persistentModelID
+            }
+        }
+    }
+    
     var body: some View {
         ZStack {
             Color.Colors.backgroundMain
@@ -115,9 +140,11 @@ struct ProductView: View {
                     VStack(spacing: 20) {
                         InsertTextField(
                             insertString: $productName,
-                            isError: false,
+                            isError: isDuplicateProduct,
                             placeholder: "Название товара",
-                            subtitle: "Такой товар уже есть"
+                            subtitle: isDuplicateProduct
+                                    ? "Этот товар уже есть в списке, добавьте другой"
+                                    : ""
                         )
                         .onChange(of: productName) {
                             isDropdownVisible = !isSelecting
@@ -208,11 +235,13 @@ struct ProductView: View {
             .isEmpty
         && !productCount.isEmpty
         && unitOfMeasurement != nil
+        && !isDuplicateProduct
     }
     
     private func saveProduct() {
-        guard let count = Int(productCount),
-              let unit = unitOfMeasurement else {
+        guard filled,
+                let count = Int(productCount),
+                let unit = unitOfMeasurement else {
             return
         }
         
@@ -228,6 +257,7 @@ struct ProductView: View {
             
         case .edit:
             existingItem?.title = productName
+                .trimmingCharacters(in: .whitespacesAndNewlines)
             existingItem?.count = count
             existingItem?.unit = unit
         }
