@@ -187,6 +187,7 @@ struct ProductView: View {
                 
                 Spacer()
             }
+            .safeAreaPadding(.top)
         }
     }
     
