@@ -9,7 +9,7 @@ import Foundation
 import SwiftData
 
 @Model
-class ListItem: Identifiable {
+final class ListItem: Identifiable {
     var id = UUID()
     var name: String
     var color: ColorOption
@@ -37,7 +37,6 @@ class ListItem: Identifiable {
         self.icon = icon
         self.items = items
     }
-    
 }
 
 extension ListItem {
