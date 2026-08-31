@@ -11,6 +11,7 @@ import SwiftData
 struct ItemsListView: View {
 
     @State private var searchText = ""
+    @State private var itemToDelete: ShoppingItem?
 
     @Environment(\.modelContext) var modelContext
     @Environment(NavigationRoute.self) private var router
@@ -41,7 +42,7 @@ struct ItemsListView: View {
                             allowsFullSwipe: false
                         ) {
                             Button(role: .destructive) {
-                                modelContext.delete(item)
+                                itemToDelete = item
                             } label: {
                                 Label(
                                     "",
@@ -93,6 +94,44 @@ struct ItemsListView: View {
         .navigationTitle(list.name)
         .navigationBarTitleDisplayMode(.inline)
         .toolbarRole(.editor)
+        .alert(
+            "Удаление товара",
+            isPresented: Binding(
+                get: {
+                    itemToDelete != nil
+                },
+                set: { isPresented in
+                    if !isPresented {
+                        itemToDelete = nil
+                    }
+                }
+            )
+        ) {
+            Button("Удалить", role: .destructive) {
+                if let item = itemToDelete {
+                    deleteItem(item)
+                }
+
+                itemToDelete = nil
+            }
+            
+            Button("Отменить", role: .cancel) {
+                itemToDelete = nil
+            }
+        } message: {
+            Text("Вы действительно хотите удалить товар?")
+        }
+    }
+    
+    private func deleteItem(_ item: ShoppingItem) {
+        list.items.removeAll { $0.id == item.id }
+        modelContext.delete(item)
+        
+        do {
+            try modelContext.save()
+        } catch {
+            print("Ошибка удаления товара: \(error)")
+        }
     }
 }
 
