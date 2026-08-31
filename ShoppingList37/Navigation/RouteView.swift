@@ -8,7 +8,6 @@
 import SwiftUI
 
 struct RouteView: View {
-
     @State private var router = NavigationRoute()
 
     var body: some View {
@@ -33,12 +32,10 @@ struct RouteView: View {
         switch route {
         case .createList:
             CreateEditListView()
-
         case .itemsList:
             if let list = router.selectedList {
                 ItemsListView(list: list)
             }
-
         case .createProduct:
             if let list = router.selectedList {
                 ProductView(
@@ -47,7 +44,6 @@ struct RouteView: View {
                     existingItem: nil
                 )
             }
-
         case .editProduct:
             if let list = router.selectedList,
                let item = router.selectedItem {
