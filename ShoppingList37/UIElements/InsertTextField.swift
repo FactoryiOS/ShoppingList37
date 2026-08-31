@@ -14,7 +14,7 @@ struct InsertTextField: View {
     var placeholder: String
     var subtitle: String
     
-    @Environment(\.colorScheme) var colorScheme: ColorScheme
+    @Environment(\.colorScheme) private var colorScheme: ColorScheme
 
     // MARK: - Body
     var body: some View {
@@ -38,17 +38,15 @@ struct InsertTextField: View {
     }
     
     private func universalTextField() -> some View {
-        VStack {
-            TextField(
-                "",
-                text: $insertString,
-                prompt: Text(placeholder)
-                    .foregroundStyle(Color.Colors.textInactive)
-            )
-            .padding(.leading, 16)
-            .padding(.vertical, 16)
-            .font(.body)
-        }
+        TextField(
+            "",
+            text: $insertString,
+            prompt: Text(placeholder)
+                .foregroundStyle(Color.Colors.textInactive)
+        )
+        .padding(.leading, 16)
+        .padding(.vertical, 16)
+        .font(.body)
     }
     
     private func errorSubtitle() -> some View {
@@ -75,7 +73,7 @@ struct InsertTextField: View {
     
     private func closeButton() -> some View {
         VStack {
-            if insertString.count > 0 {
+            if !insertString.isEmpty {
                 Button {
                     insertString = ""
                 } label: {
