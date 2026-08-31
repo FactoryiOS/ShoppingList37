@@ -8,29 +8,29 @@ import SwiftUI
 import SwiftData
 
 struct MainListsView: View {
-
+    
     @Query private var lists: [ListItem]
-
+    
     @Environment(\.modelContext) var modelContext
     @Environment(NavigationRoute.self) private var router
-
+    
     @AppStorage("appScheme")
     private var appScheme = AppScheme.system.rawValue
-
+    
     private var selectedScheme: AppScheme {
         AppScheme(rawValue: appScheme) ?? .system
     }
-
+    
     private var themeIcon: String {
         switch selectedScheme {
         case .dark:
             return "circle.lefthalf.filled"
-
+            
         case .light, .system:
             return "circle.righthalf.filled"
         }
     }
-
+    
     private var navigationMenu: some View {
         Menu {
             Menu {
@@ -40,7 +40,7 @@ struct MainListsView: View {
                     } label: {
                         HStack {
                             Text(scheme.title)
-
+                            
                             if selectedScheme == scheme {
                                 Image(systemName: "checkmark")
                             }
@@ -55,15 +55,31 @@ struct MainListsView: View {
             }
         } label: {
             Image(systemName: "ellipsis.circle")
+                .font(.system(size: 19.5))
+                .frame(width: 44, height: 44)
         }
+        .tint(.primary)
     }
-
+    
     var body: some View {
-        VStack {
+        VStack(spacing: 0) {
             Group {
                 if lists.isEmpty {
                     PlaceholderView(state: .mainScreen)
+                        .padding(.top, 88)
                 } else {
+                    HStack {
+                        Text("Мои списки")
+                            .font(.title1)
+                            .lineLimit(1)
+                        
+                        Spacer()
+                        
+                        navigationMenu
+                    }
+                    .padding(.horizontal, 16)
+                    .frame(height: 44)
+                    
                     List {
                         ForEach(lists) { list in
                             ListCellView(item: list)
@@ -92,7 +108,7 @@ struct MainListsView: View {
                                         Image(systemName: "trash")
                                     }
                                     .tint(.red)
-
+                                    
                                     Button {
                                         let newItem = ListItem(
                                             name: "\(list.name) (Копия)",
@@ -106,7 +122,7 @@ struct MainListsView: View {
                                                 )
                                             }
                                         )
-
+                                        
                                         modelContext.insert(newItem)
                                     } label: {
                                         Image(
@@ -122,15 +138,9 @@ struct MainListsView: View {
                     .scrollContentBackground(.hidden)
                 }
             }
-            .navigationTitle("Мои списки")
-            .toolbar {
-                ToolbarItem(placement: .topBarTrailing) {
-                    navigationMenu
-                }
-            }
-
+            
             Spacer()
-
+            
             BaseButton(
                 title: "Создать список",
                 isActive: true
@@ -140,6 +150,7 @@ struct MainListsView: View {
             .padding(.bottom, 20)
         }
         .background(Color.Colors.backgroundMain)
+        .toolbar(.hidden, for: .navigationBar)
     }
 }
 
