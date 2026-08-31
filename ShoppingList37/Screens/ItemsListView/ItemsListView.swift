@@ -9,25 +9,25 @@ import SwiftUI
 import SwiftData
 
 struct ItemsListView: View {
-
+    
     @State private var searchText = ""
     @State private var itemToDelete: ShoppingItem?
-
+    
     @Environment(\.modelContext) var modelContext
     @Environment(NavigationRoute.self) private var router
-
+    
     let list: ListItem
-
+    
     private var filteredItems: [ShoppingItem] {
         guard !searchText.isEmpty else {
             return list.items
         }
-
+        
         return list.items.filter {
             $0.title.localizedCaseInsensitiveContains(searchText)
         }
     }
-
+    
     var body: some View {
         VStack(spacing: 0) {
             List {
@@ -35,7 +35,9 @@ struct ItemsListView: View {
                     ShoppingItemCell(item: item)
                         .contentShape(Rectangle())
                         .onTapGesture {
-                            item.isPurchased.toggle()
+                            withAnimation(.easeInOut(duration: 0.3)) {
+                                togglePurchased(item)
+                            }
                         }
                         .swipeActions(
                             edge: .trailing,
@@ -49,7 +51,7 @@ struct ItemsListView: View {
                                     systemImage: "trash"
                                 )
                             }
-
+                            
                             Button {
                                 router.selectedList = list
                                 router.selectedItem = item
@@ -80,7 +82,7 @@ struct ItemsListView: View {
                 ),
                 prompt: "Поиск"
             )
-
+            
             BaseButton(
                 title: "Добавить товар"
             ) {
@@ -111,7 +113,7 @@ struct ItemsListView: View {
                 if let item = itemToDelete {
                     deleteItem(item)
                 }
-
+                
                 itemToDelete = nil
             }
             
@@ -131,6 +133,18 @@ struct ItemsListView: View {
             try modelContext.save()
         } catch {
             print("Ошибка удаления товара: \(error)")
+        }
+    }
+    
+    private func togglePurchased(_ item: ShoppingItem) {
+        item.isPurchased.toggle()
+        
+        list.items.sort {
+            if $0.isPurchased != $1.isPurchased {
+                return !$0.isPurchased
+            }
+            
+            return false
         }
     }
 }
