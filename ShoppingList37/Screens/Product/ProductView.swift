@@ -26,7 +26,7 @@ struct ProductView: View {
     @State private var productName: String
     @State private var productCount: String
     @State private var unitOfMeasurement: MeasurementUnit
-    @State private var isDropdownVisible: Bool = true
+    @State private var isDropdownVisible: Bool = false
     @State private var isSelecting: Bool = false
     
     init(
