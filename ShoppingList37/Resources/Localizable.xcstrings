@@ -41,6 +41,12 @@
             "state" : "translated",
             "value" : "Enter list name"
           }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Введите название списка"
+          }
         }
       }
     },
@@ -52,6 +58,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Select design"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Выберите дизайн"
           }
         }
       }
@@ -65,6 +77,12 @@
             "state" : "translated",
             "value" : "Select color"
           }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Выберите цвет"
+          }
         }
       }
     },
@@ -76,6 +94,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "g"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "г"
           }
         }
       }
@@ -89,6 +113,12 @@
             "state" : "translated",
             "value" : "Done"
           }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Готово"
+          }
         }
       }
     },
@@ -100,6 +130,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Let's plan our shopping!"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Давайте спланируем покупки"
           }
         }
       }
@@ -113,6 +149,12 @@
             "state" : "translated",
             "value" : "Add product"
           }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Добавить товар"
+          }
         }
       }
     },
@@ -124,6 +166,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Welcome!"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Добро пожаловать!"
           }
         }
       }
@@ -137,6 +185,12 @@
             "state" : "translated",
             "value" : "u.o.m."
           }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ед. изм."
+          }
         }
       }
     },
@@ -148,6 +202,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "and don't worry about shopping"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "и не переживайте о покупках"
           }
         }
       }
@@ -161,6 +221,12 @@
             "state" : "translated",
             "value" : "kg"
           }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "кг"
+          }
         }
       }
     },
@@ -172,6 +238,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Count"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Количество"
           }
         }
       }
@@ -185,6 +257,12 @@
             "state" : "translated",
             "value" : "l"
           }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "л"
+          }
         }
       }
     },
@@ -196,6 +274,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "ml"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "мл"
           }
         }
       }
@@ -209,6 +293,12 @@
             "state" : "translated",
             "value" : "My lists"
           }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Мои списки"
+          }
         }
       }
     },
@@ -220,6 +310,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Product name"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Название товара"
           }
         }
       }
@@ -233,6 +329,12 @@
             "state" : "translated",
             "value" : "Begin"
           }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Начать"
+          }
         }
       }
     },
@@ -244,6 +346,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Start adding products"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Начните добавлять товары"
           }
         }
       }
@@ -257,6 +365,12 @@
             "state" : "translated",
             "value" : "Never forget what you need to buy."
           }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Никогда не забывайте, что нужно купить"
+          }
         }
       }
     },
@@ -268,6 +382,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Cancel"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Отменить"
           }
         }
       }
@@ -281,6 +401,12 @@
             "state" : "translated",
             "value" : "Search"
           }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Поиск"
+          }
         }
       }
     },
@@ -292,6 +418,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Edit"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Редактировать"
           }
         }
       }
@@ -305,6 +437,12 @@
             "state" : "translated",
             "value" : "Edit list"
           }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Редактировать список"
+          }
         }
       }
     },
@@ -316,6 +454,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Light"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Светлая"
           }
         }
       }
@@ -329,6 +473,12 @@
             "state" : "translated",
             "value" : "System"
           }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Системная"
+          }
         }
       }
     },
@@ -340,6 +490,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Create lists"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Создавайте списки"
           }
         }
       }
@@ -353,6 +509,12 @@
             "state" : "translated",
             "value" : "Create your first list"
           }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Создайте свой первый список"
+          }
         }
       }
     },
@@ -364,6 +526,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Creating product"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Создание товара"
           }
         }
       }
@@ -377,6 +545,12 @@
             "state" : "translated",
             "value" : "Create"
           }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Создать"
+          }
         }
       }
     },
@@ -388,6 +562,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Create list"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Создать список"
           }
         }
       }
@@ -401,6 +581,12 @@
             "state" : "translated",
             "value" : "Save"
           }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Сохранить"
+          }
         }
       }
     },
@@ -412,6 +598,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "This product already exists"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Такой товар уже есть"
           }
         }
       }
@@ -425,6 +617,12 @@
             "state" : "translated",
             "value" : "Dark"
           }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Тёмная"
+          }
         }
       }
     },
@@ -436,6 +634,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Set theme"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Установить тему"
           }
         }
       }
@@ -449,6 +653,12 @@
             "state" : "translated",
             "value" : "Color"
           }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Цвет"
+          }
         }
       }
     },
@@ -460,6 +670,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "pcs."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "шт"
           }
         }
       }
