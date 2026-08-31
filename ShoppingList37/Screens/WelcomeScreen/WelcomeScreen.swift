@@ -6,7 +6,6 @@
 import SwiftUI
 
 struct WelcomeScreen: View {
-
     let onComplete: () -> Void
     
     var body: some View {
