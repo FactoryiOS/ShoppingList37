@@ -16,7 +16,7 @@ struct ListCellView: View {
             avatarField
 
             Text(item.name)
-                .font(.title3.bold())
+                .font(.title3.weight(.semibold))
                 .foregroundStyle(Color.Colors.textPrimary)
                 .lineLimit(1)
 
@@ -61,7 +61,7 @@ struct ListCellView: View {
                 .font(.body)
 
             Text("\(item.totalAmount)")
-                .font(.subheadline.bold())
+                .font(.headline)
         }
         .foregroundStyle(Color.Colors.textPrimary)
         .padding(.horizontal, 10)
