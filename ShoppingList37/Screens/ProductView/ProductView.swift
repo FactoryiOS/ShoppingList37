@@ -14,10 +14,10 @@ enum ProductMode {
 }
 
 struct ProductView: View {
-    
     let mode: ProductMode
     let list: ListItem
     let existingItem: ShoppingItem?
+    
     @Query private var allItems: [ShoppingItem]
     
     @Environment(\.modelContext) private var modelContext
@@ -247,7 +247,12 @@ struct ProductView: View {
             existingItem?.unit = unitOfMeasurement
         }
         
-        try? modelContext.save()
+        do {
+            try modelContext.save()
+            router.dismissModal()
+        } catch {
+            assertionFailure("Failed to save product: \(error)")
+        }
         
         router.dismissModal()
     }
