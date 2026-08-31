@@ -7,11 +7,6 @@
 
 import SwiftUI
 
-enum ImageString: String {
-    case closeButton = "xmark.circle.fill"
-    case magnifyingGlass = "magnifyingglass"
-}
-
 extension Image {
     init(system: ImageString) {
         self.init(systemName: system.rawValue)
