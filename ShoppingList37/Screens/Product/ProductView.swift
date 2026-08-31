@@ -172,6 +172,7 @@ struct ProductView: View {
                                     .onTapGesture {
                                         isSelecting = true
                                         productName = suggestion
+                                        isDropdownVisible = false
                                     }
                                 Divider()
                             }
