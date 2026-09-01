@@ -13,6 +13,7 @@ final class NavigationRoute {
     // MARK: - Routes
     enum Route: Hashable, Identifiable {
         case createList
+        case editList
         case itemsList
         case createProduct
         case editProduct

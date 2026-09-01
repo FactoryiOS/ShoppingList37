@@ -118,6 +118,14 @@ struct MainListsView: View {
                                         )
                                     }
                                     .tint(.orange)
+                                    
+                                    Button {
+                                        router.selectedList = list
+                                        router.push(.editList)
+                                    } label: {
+                                        Image(systemName: "square.and.pencil")
+                                    }
+                                    .tint(Color.gray)
                                 }
                         }
                     }

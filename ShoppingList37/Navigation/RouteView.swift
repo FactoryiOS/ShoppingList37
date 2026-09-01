@@ -32,6 +32,15 @@ struct RouteView: View {
         switch route {
         case .createList:
             CreateEditListView()
+        case .editList:
+            if let list = router.selectedList {
+                CreateEditListView(
+                    existingList: list,
+                    initialString: list.name,
+                    initialColor: list.color,
+                    initialIcon: list.icon
+                )
+            }
         case .itemsList:
             if let list = router.selectedList {
                 ItemsListView(list: list)
