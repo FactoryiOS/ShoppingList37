@@ -14,13 +14,13 @@ enum MeasurementUnit: String, CaseIterable, Codable {
     case liter = "л"
     case milliliter = "мл"
     
-    var short: String {
+    var short: LocalizedStringResource {
         switch self {
-        case .piece: "шт"
-        case .kilogram: "кг"
-        case .gram: "г"
-        case .liter: "л"
-        case .milliliter: "мл"
+        case .piece: return "шт"
+        case .kilogram: return "кг"
+        case .gram: return "г"
+        case .liter: return "л"
+        case .milliliter: return "мл"
         }
     }
 }
