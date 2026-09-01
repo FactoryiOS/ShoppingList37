@@ -10,6 +10,7 @@ import SwiftUI
 enum ImageString: String {
     case closeButton = "xmark.circle.fill"
     case magnifyingGlass = "magnifyingglass"
+    case upAndDown = "arrow.up.arrow.down"
 }
 
 extension Image {

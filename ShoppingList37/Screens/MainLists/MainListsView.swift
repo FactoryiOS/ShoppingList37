@@ -16,6 +16,9 @@ struct MainListsView: View {
 
     @AppStorage("appScheme")
     private var appScheme = AppScheme.system.rawValue
+    
+    @State private var showAlertDelete: Bool = false
+    @State private var deletedList: ListItem?
 
     private var selectedScheme: AppScheme {
         AppScheme(rawValue: appScheme) ?? .system
@@ -53,6 +56,16 @@ struct MainListsView: View {
                     systemImage: themeIcon
                 )
             }
+            
+            Button {
+                sortList()
+            } label: {
+                Label {
+                    Text("Сортировка по Алфавиту")
+                } icon: {
+                    Image(system: .upAndDown)
+                }
+            }
         } label: {
             Image(systemName: "ellipsis.circle")
         }
@@ -87,7 +100,8 @@ struct MainListsView: View {
                                     allowsFullSwipe: false
                                 ) {
                                     Button(role: .destructive) {
-                                        modelContext.delete(list)
+                                        showAlertDelete = true
+                                        deletedList = list
                                     } label: {
                                         Image(systemName: "trash")
                                     }
@@ -141,6 +155,24 @@ struct MainListsView: View {
             .padding(.bottom, 20)
         }
         .background(Color.Colors.backgroundMain)
+        .alert("Удаление списка", isPresented: $showAlertDelete) {
+            Button("Отменить", role: .cancel) {
+                showAlertDelete = false
+            }
+            Button("Удалить", role: .destructive) {
+                showAlertDelete = false
+                
+                guard let deletedList else { return }
+                modelContext.delete(deletedList)
+                
+                self.deletedList = nil
+            }
+        } message: {
+            Text("Вы действительно хотите удалить список?")
+        }
+    }
+    
+    private func sortList() {
     }
 }
 
