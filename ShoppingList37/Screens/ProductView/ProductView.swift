@@ -104,7 +104,6 @@ struct ProductView: View {
         }
     }
     
-    
     private var unitMenu: some View {
         Menu {
             ForEach(MeasurementUnit.allCases, id: \.self) { unit in
@@ -193,8 +192,12 @@ struct ProductView: View {
                                     : ""
                         )
                         .onChange(of: productName) {
-                            isDropdownVisible = !isSelecting
-                            isSelecting = false
+                            if isSelecting {
+                                isDropdownVisible = false
+                                isSelecting = false
+                            } else {
+                                isDropdownVisible = true
+                            }
                         }
                         
                         HStack(spacing: 16) {
