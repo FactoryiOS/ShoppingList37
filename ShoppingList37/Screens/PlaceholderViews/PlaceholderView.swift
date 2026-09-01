@@ -6,9 +6,7 @@
 import SwiftUI
 
 // MARK: - Placeholder View
-
 struct PlaceholderView: View {
-    
     let state: EmptyStateData
     
     var body: some View {
@@ -29,7 +27,6 @@ struct PlaceholderView: View {
 }
 
 // MARK: - Empty State Data
-
 enum EmptyStateData {
     case shoppingList
     case mainScreen

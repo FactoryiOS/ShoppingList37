@@ -9,21 +9,19 @@ import Foundation
 import SwiftData
 
 @Model
-class ShoppingItem: Identifiable {
-    var id: UUID
+final class ShoppingItem: Identifiable {
+    var id = UUID()
     var title: String
     var count: Int
     var unit: MeasurementUnit
     var isPurchased: Bool
 
     init(
-        id: UUID = UUID(),
         title: String,
         count: Int,
         unit: MeasurementUnit,
         isPurchased: Bool = false
     ) {
-        self.id = id
         self.title = title
         self.count = count
         self.unit = unit

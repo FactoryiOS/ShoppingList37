@@ -9,17 +9,21 @@ import Foundation
 import SwiftData
 
 @Model
-class ListItem: Identifiable {
+final class ListItem: Identifiable {
     var id = UUID()
     var name: String
     var color: ColorOption
     var icon: PickerIcon
     @Relationship(deleteRule: .cascade)
     var items: [ShoppingItem]
-    var totalAmount: Int
     
-    var amount: Int {
+    var totalAmount: Int {
         items.count
+    }
+    var amount: Int {
+        items.filter {
+            !$0.isPurchased
+        }.count
     }
     
     init(
@@ -27,15 +31,12 @@ class ListItem: Identifiable {
         color: ColorOption,
         icon: PickerIcon,
         items: [ShoppingItem],
-        totalAmount: Int
     ) {
         self.name = name
         self.color = color
         self.icon = icon
         self.items = items
-        self.totalAmount = totalAmount
     }
-    
 }
 
 extension ListItem {
@@ -59,8 +60,7 @@ extension ListItem {
                 count: 5,
                 unit: .piece
             )
-        ],
-        totalAmount: 10
+        ]
     )
 
     static let mocks: [ListItem] = [
@@ -71,8 +71,7 @@ extension ListItem {
             items: [
                 .mock,
                 .purchasedMock
-            ],
-            totalAmount: 20
+            ]
         ),
         .init(
             name: "Для кота",
@@ -80,8 +79,7 @@ extension ListItem {
             icon: .paw,
             items: [
                 .mock
-            ],
-            totalAmount: 4
+            ]
         ),
         .init(
             name: "Вечеринка",
@@ -90,8 +88,7 @@ extension ListItem {
             items: [
                 .mock,
                 .purchasedMock
-            ],
-            totalAmount: 20
+            ]
         )
     ]
 }

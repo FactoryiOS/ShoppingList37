@@ -9,24 +9,24 @@ import SwiftUI
 import SwiftData
 
 struct ItemsListView: View {
-
     @State private var searchText = ""
-
-    @Environment(\.modelContext) var modelContext
+    @State private var itemToDelete: ShoppingItem?
+    
+    @Environment(\.modelContext) private var modelContext
     @Environment(NavigationRoute.self) private var router
-
+    
     let list: ListItem
-
+    
     private var filteredItems: [ShoppingItem] {
         guard !searchText.isEmpty else {
             return list.items
         }
-
+        
         return list.items.filter {
             $0.title.localizedCaseInsensitiveContains(searchText)
         }
     }
-
+    
     var body: some View {
         VStack(spacing: 0) {
             List {
@@ -34,21 +34,23 @@ struct ItemsListView: View {
                     ShoppingItemCell(item: item)
                         .contentShape(Rectangle())
                         .onTapGesture {
-                            item.isPurchased.toggle()
+                            withAnimation(.easeInOut(duration: 0.3)) {
+                                togglePurchased(item)
+                            }
                         }
                         .swipeActions(
                             edge: .trailing,
                             allowsFullSwipe: false
                         ) {
                             Button(role: .destructive) {
-                                modelContext.delete(item)
+                                itemToDelete = item
                             } label: {
                                 Label(
                                     "",
                                     systemImage: "trash"
                                 )
                             }
-
+                            
                             Button {
                                 router.selectedList = list
                                 router.selectedItem = item
@@ -79,7 +81,7 @@ struct ItemsListView: View {
                 ),
                 prompt: "Поиск"
             )
-
+            
             BaseButton(
                 title: "Добавить товар"
             ) {
@@ -93,6 +95,56 @@ struct ItemsListView: View {
         .navigationTitle(list.name)
         .navigationBarTitleDisplayMode(.inline)
         .toolbarRole(.editor)
+        .alert(
+            "Удаление товара",
+            isPresented: Binding(
+                get: {
+                    itemToDelete != nil
+                },
+                set: { isPresented in
+                    if !isPresented {
+                        itemToDelete = nil
+                    }
+                }
+            )
+        ) {
+            Button("Удалить", role: .destructive) {
+                if let item = itemToDelete {
+                    deleteItem(item)
+                }
+                
+                itemToDelete = nil
+            }
+            
+            Button("Отменить", role: .cancel) {
+                itemToDelete = nil
+            }
+        } message: {
+            Text("Вы действительно хотите удалить товар?")
+        }
+    }
+    
+    private func deleteItem(_ item: ShoppingItem) {
+        list.items.removeAll { $0.id == item.id }
+        modelContext.delete(item)
+        
+        do {
+            try modelContext.save()
+        } catch {
+            assertionFailure("Failed to delete item: \(error)")
+        }
+    }
+    
+    private func togglePurchased(_ item: ShoppingItem) {
+        item.isPurchased.toggle()
+        
+        list.items.sort {
+            if $0.isPurchased != $1.isPurchased {
+                return !$0.isPurchased
+            }
+            
+            return false
+        }
     }
 }
 

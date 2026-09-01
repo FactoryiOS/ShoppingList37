@@ -17,6 +17,7 @@ struct ProductView: View {
     let mode: ProductMode
     let list: ListItem
     let existingItem: ShoppingItem?
+    
     @Query private var allItems: [ShoppingItem]
     
     @Environment(\.modelContext) private var modelContext
@@ -25,9 +26,8 @@ struct ProductView: View {
     @State private var isSaving: Bool = false
     @State private var productName: String
     @State private var productCount: String
-    @State private var unitOfMeasurement: MeasurementUnit?
-    @State private var unitOfMeasurementName: String
-    @State private var isDropdownVisible: Bool = true
+    @State private var unitOfMeasurement: MeasurementUnit
+    @State private var isDropdownVisible: Bool = false
     @State private var isSelecting: Bool = false
     
     init(
@@ -51,10 +51,6 @@ struct ProductView: View {
         
         _unitOfMeasurement = State(
             initialValue: existingItem?.unit ?? .piece
-        )
-        
-        _unitOfMeasurementName = State(
-            initialValue: existingItem?.unit.rawValue ?? "шт"
         )
     }
     
@@ -94,6 +90,43 @@ struct ProductView: View {
             case .edit:
                 return isSameProduct && item.persistentModelID != existingItem?.persistentModelID
             }
+        }
+    }
+    
+    
+    private var unitMenu: some View {
+        Menu {
+            ForEach(MeasurementUnit.allCases, id: \.self) { unit in
+                Button {
+                    unitOfMeasurement = unit
+                } label: {
+                    if unit == unitOfMeasurement {
+                        Image(systemName: "checkmark")
+                    }
+                    
+                    Text(unit.rawValue)
+                }
+            }
+        } label: {
+            HStack(spacing: 4) {
+                Text("Ед. изм.")
+                    .foregroundStyle(.gray)
+                
+                Spacer()
+                
+                Text(unitOfMeasurement.rawValue)
+                    .foregroundStyle(Color.Colors.accentPressed)
+                
+                Image(systemName: "chevron.up.chevron.down")
+                    .font(.caption)
+                    .foregroundStyle(Color.Colors.accentPressed)
+            }
+            .foregroundStyle(Color.Colors.textSecondary)
+            .padding(.horizontal, 16)
+            .frame(maxWidth: .infinity)
+            .frame(height: 56)
+            .background(Color.Colors.backgroundSecondary)
+            .clipShape(RoundedRectangle(cornerRadius: 12))
         }
     }
     
@@ -169,24 +202,8 @@ struct ProductView: View {
                                 )
                             }
                             
-                            InsertTextField(
-                                insertString: $unitOfMeasurementName,
-                                isError: false,
-                                placeholder: "Ед. изм.",
-                                subtitle: ""
-                            )
-                            .onChange(
-                                of: unitOfMeasurementName
-                            ) { oldValue, newValue in
-                                onChangeUnitOfMeasurementName(
-                                    oldValue: oldValue,
-                                    newValue: newValue
-                                )
-                            }
-                            .textInputAutocapitalization(.never)
-                            .autocorrectionDisabled(true)
+                            unitMenu
                         }
-                        
                     }
                     .padding(.top, 8)
                     .padding(.horizontal, 16)
@@ -216,6 +233,7 @@ struct ProductView: View {
                 
                 Spacer()
             }
+            .safeAreaPadding(.top)
         }
     }
     
@@ -254,7 +272,7 @@ struct ProductView: View {
             let item = ShoppingItem(
                 title: productName,
                 count: count,
-                unit: unit
+                unit: unitOfMeasurement
             )
             
             list.items.append(item)
@@ -263,10 +281,15 @@ struct ProductView: View {
             existingItem?.title = productName
                 .trimmingCharacters(in: .whitespacesAndNewlines)
             existingItem?.count = count
-            existingItem?.unit = unit
+            existingItem?.unit = unitOfMeasurement
         }
         
-        try? modelContext.save()
+        do {
+            try modelContext.save()
+            router.dismissModal()
+        } catch {
+            assertionFailure("Failed to save product: \(error)")
+        }
         
         router.dismissModal()
     }
@@ -285,38 +308,6 @@ struct ProductView: View {
         
         if !isValid {
             productCount = oldValue
-        }
-    }
-    
-    private func onChangeUnitOfMeasurementName(
-        oldValue: String,
-        newValue: String
-    ) {
-        if newValue.isEmpty {
-            unitOfMeasurement = nil
-            return
-        }
-        
-        let units = MeasurementUnit.allCases.filter { measurement in
-            
-            measurement.rawValue
-                .lowercased()
-                .hasPrefix(
-                    newValue.lowercased()
-                )
-        }
-        
-        if units.isEmpty {
-            unitOfMeasurement = nil
-            unitOfMeasurementName = oldValue
-        }
-        
-        if units.count == 1 {
-            unitOfMeasurement = units.first
-            unitOfMeasurementName =
-            units.first?.rawValue ?? ""
-        } else {
-            unitOfMeasurement = nil
         }
     }
 }
