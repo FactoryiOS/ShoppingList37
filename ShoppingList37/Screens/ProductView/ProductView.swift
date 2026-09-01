@@ -254,14 +254,12 @@ struct ProductView: View {
             )
             .isEmpty
         && !productCount.isEmpty
-        && unitOfMeasurement != nil
         && !isDuplicateProduct
     }
     
     private func saveProduct() {
         guard filled,
-                let count = Int(productCount),
-                let unit = unitOfMeasurement else {
+                let count = Int(productCount) else {
             return
         }
         
@@ -289,9 +287,8 @@ struct ProductView: View {
             router.dismissModal()
         } catch {
             assertionFailure("Failed to save product: \(error)")
+            isSaving = false
         }
-        
-        router.dismissModal()
     }
     
     private func onChangeProductCount(
