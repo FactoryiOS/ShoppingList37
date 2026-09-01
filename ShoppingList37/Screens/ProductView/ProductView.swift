@@ -87,20 +87,23 @@ struct ProductView: View {
         return list.items.contains { item in
             let existingTitle = item.title
                 .trimmingCharacters(in: .whitespacesAndNewlines)
-           
+            
             let isSameProduct = existingTitle.localizedCaseInsensitiveCompare(enteredName) == .orderedSame
+            
+            guard isSameProduct else {
+                return false
+            }
             
             switch mode {
             case .create:
-                return isSameProduct
+                return true
                 
             case .edit:
-                return isSameProduct && item.persistentModelID != existingItem?.persistentModelID
+                return item !== existingItem
             }
         }
     }
-    
-    
+
     private var unitMenu: some View {
         Menu {
             ForEach(MeasurementUnit.allCases, id: \.self) { unit in
@@ -189,8 +192,12 @@ struct ProductView: View {
                                     : ""
                         )
                         .onChange(of: productName) {
-                            isDropdownVisible = !isSelecting
-                            isSelecting = false
+                            if isSelecting {
+                                isDropdownVisible = false
+                                isSelecting = false
+                            } else {
+                                isDropdownVisible = true
+                            }
                         }
                         
                         HStack(spacing: 16) {
