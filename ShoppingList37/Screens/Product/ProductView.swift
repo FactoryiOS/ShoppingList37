@@ -14,7 +14,6 @@ enum ProductMode {
 }
 
 struct ProductView: View {
-    
     let mode: ProductMode
     let list: ListItem
     let existingItem: ShoppingItem?
@@ -23,6 +22,7 @@ struct ProductView: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(NavigationRoute.self) private var router
     
+    @State private var isSaving: Bool = false
     @State private var productName: String
     @State private var productCount: String
     @State private var unitOfMeasurement: MeasurementUnit?
@@ -72,6 +72,8 @@ struct ProductView: View {
     }
     
     private var isDuplicateProduct: Bool {
+        guard !isSaving else { return false }
+        
         let enteredName = productName
             .trimmingCharacters(in: .whitespacesAndNewlines)
         
@@ -79,7 +81,7 @@ struct ProductView: View {
             return false
         }
         
-        return allItems.contains { item in
+        return list.items.contains { item in
             let existingTitle = item.title
                 .trimmingCharacters(in: .whitespacesAndNewlines)
            
@@ -244,6 +246,8 @@ struct ProductView: View {
                 let unit = unitOfMeasurement else {
             return
         }
+        
+        isSaving = true
         
         switch mode {
         case .create:
