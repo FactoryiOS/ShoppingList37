@@ -23,6 +23,7 @@ struct ProductView: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(NavigationRoute.self) private var router
     
+    @State private var isSaving: Bool = false
     @State private var productName: String
     @State private var productCount: String
     @State private var unitOfMeasurement: MeasurementUnit
@@ -63,8 +64,46 @@ struct ProductView: View {
     }
     
     private var filteredSuggestions: [String] {
-        productName.isEmpty ? [] : allHistoricalItems.filter { $0.localizedStandardContains(productName)}
+        let enteredName = productName
+            .trimmingCharacters(in: .whitespacesAndNewlines)
+        
+        guard !enteredName.isEmpty else { return [] }
+        
+        return allHistoricalItems.filter { suggestion in
+            suggestion.localizedStandardContains(enteredName) && suggestion.localizedCaseInsensitiveCompare(enteredName) != .orderedSame
+        }
     }
+    
+    private var isDuplicateProduct: Bool {
+        guard !isSaving else { return false }
+        
+        let enteredName = productName
+            .trimmingCharacters(in: .whitespacesAndNewlines)
+        
+        guard !enteredName.isEmpty else {
+            return false
+        }
+        
+        return list.items.contains { item in
+            let existingTitle = item.title
+                .trimmingCharacters(in: .whitespacesAndNewlines)
+           
+            let isSameProduct = existingTitle.localizedCaseInsensitiveCompare(enteredName) == .orderedSame
+            
+            guard isSameProduct else {
+                return false
+            }
+            
+            switch mode {
+            case .create:
+                return true
+                
+            case .edit:
+                return item !== existingItem
+            }
+        }
+    }
+    
     
     private var unitMenu: some View {
         Menu {
@@ -147,9 +186,11 @@ struct ProductView: View {
                     VStack(spacing: 20) {
                         InsertTextField(
                             insertString: $productName,
-                            isError: false,
+                            isError: isDuplicateProduct,
                             placeholder: "Название товара",
-                            subtitle: "Такой товар уже есть"
+                            subtitle: isDuplicateProduct
+                                    ? "Этот товар уже есть в списке, добавьте другой"
+                                    : ""
                         )
                         .onChange(of: productName) {
                             isDropdownVisible = !isSelecting
@@ -224,12 +265,16 @@ struct ProductView: View {
             )
             .isEmpty
         && !productCount.isEmpty
+        && !isDuplicateProduct
     }
     
     private func saveProduct() {
-        guard let count = Int(productCount) else {
+        guard filled,
+                let count = Int(productCount) else {
             return
         }
+        
+        isSaving = true
         
         switch mode {
         case .create:
@@ -243,6 +288,7 @@ struct ProductView: View {
             
         case .edit:
             existingItem?.title = productName
+                .trimmingCharacters(in: .whitespacesAndNewlines)
             existingItem?.count = count
             existingItem?.unit = unitOfMeasurement
         }
@@ -252,9 +298,8 @@ struct ProductView: View {
             router.dismissModal()
         } catch {
             assertionFailure("Failed to save product: \(error)")
+            isSaving = false
         }
-        
-        router.dismissModal()
     }
     
     private func onChangeProductCount(
