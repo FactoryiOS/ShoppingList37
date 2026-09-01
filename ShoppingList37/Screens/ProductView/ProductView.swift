@@ -87,7 +87,7 @@ struct ProductView: View {
         return list.items.contains { item in
             let existingTitle = item.title
                 .trimmingCharacters(in: .whitespacesAndNewlines)
-           
+            
             let isSameProduct = existingTitle.localizedCaseInsensitiveCompare(enteredName) == .orderedSame
             
             guard isSameProduct else {
@@ -103,7 +103,7 @@ struct ProductView: View {
             }
         }
     }
-    
+
     private var unitMenu: some View {
         Menu {
             ForEach(MeasurementUnit.allCases, id: \.self) { unit in
