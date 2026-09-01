@@ -7,7 +7,6 @@
 import SwiftUI
 
 struct IconPickerView: View {
-
     @Binding var selectedIcon: PickerIcon?
     let selectionColor: Color
 
@@ -29,7 +28,6 @@ struct IconPickerView: View {
     }
 
     // MARK: - Header
-
     private var header: some View {
         Text("Выберите дизайн")
             .font(.callout)
@@ -37,7 +35,6 @@ struct IconPickerView: View {
     }
 
     // MARK: - Grid
-
     private var grid: some View {
         LazyVGrid(columns: columns, spacing: 12) {
             ForEach(PickerIcon.allCases) { icon in
@@ -50,12 +47,10 @@ struct IconPickerView: View {
     }
 
     // MARK: - Icon Cell
-
     private func iconCell(
         _ icon: PickerIcon,
         isSelected: Bool
     ) -> some View {
-
         let cellBackground = isSelected
             ? selectionColor
             : Color.Colors.iconBackground
