@@ -64,23 +64,23 @@ struct MainListsView: View {
     
     var body: some View {
         VStack(spacing: 0) {
+            HStack {
+                Text("Мои списки")
+                    .font(.title1)
+                    .lineLimit(1)
+                
+                Spacer()
+                
+                navigationMenu
+            }
+            .padding(.horizontal, 16)
+            .frame(height: 44)
+            
             Group {
                 if lists.isEmpty {
                     PlaceholderView(state: .mainScreen)
                         .padding(.top, 88)
                 } else {
-                    HStack {
-                        Text("Мои списки")
-                            .font(.title1)
-                            .lineLimit(1)
-                        
-                        Spacer()
-                        
-                        navigationMenu
-                    }
-                    .padding(.horizontal, 16)
-                    .frame(height: 44)
-                    
                     List {
                         ForEach(lists) { list in
                             ListCellView(item: list)

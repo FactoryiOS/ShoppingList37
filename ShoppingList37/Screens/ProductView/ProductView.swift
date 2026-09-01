@@ -64,7 +64,14 @@ struct ProductView: View {
     }
     
     private var filteredSuggestions: [String] {
-        productName.isEmpty ? [] : allHistoricalItems.filter { $0.localizedStandardContains(productName)}
+        let enteredName = productName
+            .trimmingCharacters(in: .whitespacesAndNewlines)
+        
+        guard !enteredName.isEmpty else { return [] }
+        
+        return allHistoricalItems.filter { suggestion in
+            suggestion.localizedStandardContains(enteredName) && suggestion.localizedCaseInsensitiveCompare(enteredName) != .orderedSame
+        }
     }
     
     private var isDuplicateProduct: Bool {
