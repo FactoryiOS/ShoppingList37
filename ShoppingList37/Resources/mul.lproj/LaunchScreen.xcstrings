@@ -1,0 +1,24 @@
+{
+  "sourceLanguage" : "en",
+  "strings" : {
+    "ZD5-2i-AGL.text" : {
+      "comment" : "Class = \"UILabel\"; text = \"Shopping list\"; ObjectID = \"ZD5-2i-AGL\";",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Shopping list"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Список покупок"
+          }
+        }
+      }
+    }
+  },
+  "version" : "1.2"
+}

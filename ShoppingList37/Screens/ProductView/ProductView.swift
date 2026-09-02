@@ -14,20 +14,20 @@ enum ProductMode {
 }
 
 struct ProductView: View {
-    
     let mode: ProductMode
     let list: ListItem
     let existingItem: ShoppingItem?
+    
     @Query private var allItems: [ShoppingItem]
     
     @Environment(\.modelContext) private var modelContext
     @Environment(NavigationRoute.self) private var router
     
+    @State private var isSaving: Bool = false
     @State private var productName: String
     @State private var productCount: String
-    @State private var unitOfMeasurement: MeasurementUnit?
-    @State private var unitOfMeasurementName: String
-    @State private var isDropdownVisible: Bool = true
+    @State private var unitOfMeasurement: MeasurementUnit
+    @State private var isDropdownVisible: Bool = false
     @State private var isSelecting: Bool = false
     
     init(
@@ -52,10 +52,6 @@ struct ProductView: View {
         _unitOfMeasurement = State(
             initialValue: existingItem?.unit ?? .piece
         )
-        
-        _unitOfMeasurementName = State(
-            initialValue: existingItem?.unit.rawValue ?? "шт"
-        )
     }
     
     private var allHistoricalItems: [String] {
@@ -68,8 +64,82 @@ struct ProductView: View {
     }
     
     private var filteredSuggestions: [String] {
-        productName.isEmpty ? [] : allHistoricalItems.filter { $0.localizedStandardContains(productName)}
+        let enteredName = productName
+            .trimmingCharacters(in: .whitespacesAndNewlines)
+        
+        guard !enteredName.isEmpty else { return [] }
+        
+        return allHistoricalItems.filter { suggestion in
+            suggestion.localizedStandardContains(enteredName) && suggestion.localizedCaseInsensitiveCompare(enteredName) != .orderedSame
+        }
     }
+    
+    private var isDuplicateProduct: Bool {
+        guard !isSaving else { return false }
+        
+        let enteredName = productName
+            .trimmingCharacters(in: .whitespacesAndNewlines)
+        
+        guard !enteredName.isEmpty else {
+            return false
+        }
+        
+        return list.items.contains { item in
+            let existingTitle = item.title
+                .trimmingCharacters(in: .whitespacesAndNewlines)
+            
+            let isSameProduct = existingTitle.localizedCaseInsensitiveCompare(enteredName) == .orderedSame
+            
+            guard isSameProduct else {
+                return false
+            }
+            
+            switch mode {
+            case .create:
+                return true
+                
+            case .edit:
+                return item !== existingItem
+            }
+        }
+    }
+
+    private var unitMenu: some View {
+        Menu {
+            ForEach(MeasurementUnit.allCases, id: \.self) { unit in
+                Button {
+                    unitOfMeasurement = unit
+                } label: {
+                    if unit == unitOfMeasurement {
+                        Image(systemName: "checkmark")
+                    }
+                    
+                    Text(unit.short)
+                }
+            }
+        } label: {
+            HStack(spacing: 4) {
+                Text("Ед. изм.")
+                    .foregroundStyle(.gray)
+                
+                Spacer()
+                
+                Text(unitOfMeasurement.short)
+                    .foregroundStyle(Color.Colors.accentPressed)
+                
+                Image(systemName: "chevron.up.chevron.down")
+                    .font(.caption)
+                    .foregroundStyle(Color.Colors.accentPressed)
+            }
+            .foregroundStyle(Color.Colors.textSecondary)
+            .padding(.horizontal, 16)
+            .frame(maxWidth: .infinity)
+            .frame(height: 56)
+            .background(Color.Colors.backgroundSecondary)
+            .clipShape(RoundedRectangle(cornerRadius: 12))
+        }
+    }
+    
     var body: some View {
         ZStack {
             Color.Colors.backgroundMain
@@ -115,20 +185,26 @@ struct ProductView: View {
                     VStack(spacing: 20) {
                         InsertTextField(
                             insertString: $productName,
-                            isError: false,
-                            placeholder: "Название товара",
-                            subtitle: "Такой товар уже есть"
+                            isError: isDuplicateProduct,
+                            placeholder: String(localized: "Название товара"),
+                            subtitle: isDuplicateProduct
+                                    ? String(localized: "Этот товар уже есть в списке, добавьте другой")
+                                    : ""
                         )
                         .onChange(of: productName) {
-                            isDropdownVisible = !isSelecting
-                            isSelecting = false
+                            if isSelecting {
+                                isDropdownVisible = false
+                                isSelecting = false
+                            } else {
+                                isDropdownVisible = true
+                            }
                         }
                         
                         HStack(spacing: 16) {
                             InsertTextField(
                                 insertString: $productCount,
                                 isError: false,
-                                placeholder: "Количество",
+                                placeholder: String(localized: "Количество"),
                                 subtitle: ""
                             )
                             .onChange(
@@ -140,24 +216,8 @@ struct ProductView: View {
                                 )
                             }
                             
-                            InsertTextField(
-                                insertString: $unitOfMeasurementName,
-                                isError: false,
-                                placeholder: "Ед. изм.",
-                                subtitle: ""
-                            )
-                            .onChange(
-                                of: unitOfMeasurementName
-                            ) { oldValue, newValue in
-                                onChangeUnitOfMeasurementName(
-                                    oldValue: oldValue,
-                                    newValue: newValue
-                                )
-                            }
-                            .textInputAutocapitalization(.never)
-                            .autocorrectionDisabled(true)
+                            unitMenu
                         }
-                        
                     }
                     .padding(.top, 8)
                     .padding(.horizontal, 16)
@@ -187,10 +247,11 @@ struct ProductView: View {
                 
                 Spacer()
             }
+            .safeAreaPadding(.top)
         }
     }
     
-    private var title: String {
+    private var title: LocalizedStringResource {
         switch mode {
         case .create:
             return "Создание товара"
@@ -207,34 +268,41 @@ struct ProductView: View {
             )
             .isEmpty
         && !productCount.isEmpty
-        && unitOfMeasurement != nil
+        && !isDuplicateProduct
     }
     
     private func saveProduct() {
-        guard let count = Int(productCount),
-              let unit = unitOfMeasurement else {
+        guard filled,
+                let count = Int(productCount) else {
             return
         }
+        
+        isSaving = true
         
         switch mode {
         case .create:
             let item = ShoppingItem(
                 title: productName,
                 count: count,
-                unit: unit
+                unit: unitOfMeasurement
             )
             
             list.items.append(item)
             
         case .edit:
             existingItem?.title = productName
+                .trimmingCharacters(in: .whitespacesAndNewlines)
             existingItem?.count = count
-            existingItem?.unit = unit
+            existingItem?.unit = unitOfMeasurement
         }
         
-        try? modelContext.save()
-        
-        router.dismissModal()
+        do {
+            try modelContext.save()
+            router.dismissModal()
+        } catch {
+            assertionFailure("Failed to save product: \(error)")
+            isSaving = false
+        }
     }
     
     private func onChangeProductCount(
@@ -251,38 +319,6 @@ struct ProductView: View {
         
         if !isValid {
             productCount = oldValue
-        }
-    }
-    
-    private func onChangeUnitOfMeasurementName(
-        oldValue: String,
-        newValue: String
-    ) {
-        if newValue.isEmpty {
-            unitOfMeasurement = nil
-            return
-        }
-        
-        let units = MeasurementUnit.allCases.filter { measurement in
-            
-            measurement.rawValue
-                .lowercased()
-                .hasPrefix(
-                    newValue.lowercased()
-                )
-        }
-        
-        if units.isEmpty {
-            unitOfMeasurement = nil
-            unitOfMeasurementName = oldValue
-        }
-        
-        if units.count == 1 {
-            unitOfMeasurement = units.first
-            unitOfMeasurementName =
-            units.first?.rawValue ?? ""
-        } else {
-            unitOfMeasurement = nil
         }
     }
 }

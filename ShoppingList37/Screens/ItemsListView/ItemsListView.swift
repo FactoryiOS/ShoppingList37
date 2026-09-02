@@ -9,22 +9,19 @@ import SwiftUI
 import SwiftData
 
 struct ItemsListView: View {
-
     @State private var searchText = ""
-    @State private var showAlertDelete: Bool = false
-    @State private var showAlertDeleteAll: Bool = false
-
-    @Environment(\.modelContext) var modelContext
+    @State private var itemToDelete: ShoppingItem?
+    
+    @Environment(\.modelContext) private var modelContext
     @Environment(NavigationRoute.self) private var router
-
-    @Bindable var list: ListItem
-    @State private var deletedItem: ShoppingItem?
-
+    
+    let list: ListItem
+    
     private var filteredItems: [ShoppingItem] {
         guard !searchText.isEmpty else {
             return list.items
         }
-
+        
         return list.items.filter {
             $0.title.localizedCaseInsensitiveContains(searchText)
         }
@@ -81,19 +78,20 @@ struct ItemsListView: View {
                     ShoppingItemCell(item: item)
                         .contentShape(Rectangle())
                         .onTapGesture {
-                            item.isPurchased.toggle()
+                            withAnimation(.easeInOut(duration: 0.3)) {
+                                togglePurchased(item)
+                            }
                         }
                         .swipeActions(
                             edge: .trailing,
                             allowsFullSwipe: false
                         ) {
                             Button(role: .destructive) {
-                                showAlertDelete = true
-                                deletedItem = item
+                                itemToDelete = item
                             } label: {
                                 Image(systemName: "trash")
                             }
-
+                            
                             Button {
                                 router.selectedList = list
                                 router.selectedItem = item
@@ -131,7 +129,7 @@ struct ItemsListView: View {
             }
 
             BaseButton(
-                title: "Добавить товар"
+                title: String(localized: "Добавить товар")
             ) {
                 router.selectedList = list
                 router.selectedItem = nil
@@ -143,17 +141,29 @@ struct ItemsListView: View {
         .navigationTitle(list.name)
         .navigationBarTitleDisplayMode(.inline)
         .toolbarRole(.editor)
-        .alert("Удаление товара", isPresented: $showAlertDelete) {
-            Button("Отменить", role: .cancel) {
-                showAlertDelete = false
-            }
+        .alert(
+            "Удаление товара",
+            isPresented: Binding(
+                get: {
+                    itemToDelete != nil
+                },
+                set: { isPresented in
+                    if !isPresented {
+                        itemToDelete = nil
+                    }
+                }
+            )
+        ) {
             Button("Удалить", role: .destructive) {
-                showAlertDelete = false
+                if let item = itemToDelete {
+                    deleteItem(item)
+                }
                 
-                guard let deletedItem else { return }
-                deleteItem(deletedItem)
-                
-                self.deletedItem = nil
+                itemToDelete = nil
+            }
+            
+            Button("Отменить", role: .cancel) {
+                itemToDelete = nil
             }
         } message: {
             Text("Вы действительно хотите удалить товар?")
@@ -204,6 +214,25 @@ struct ItemsListView: View {
         do {
             try modelContext.save()
         } catch { }
+        modelContext.delete(item)
+        
+        do {
+            try modelContext.save()
+        } catch {
+            assertionFailure("Failed to delete item: \(error)")
+        }
+    }
+    
+    private func togglePurchased(_ item: ShoppingItem) {
+        item.isPurchased.toggle()
+        
+        list.items.sort {
+            if $0.isPurchased != $1.isPurchased {
+                return !$0.isPurchased
+            }
+            
+            return false
+        }
     }
 }
 

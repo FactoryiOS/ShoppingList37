@@ -9,24 +9,27 @@ import SwiftUI
 import SwiftData
 
 private enum TextConstants {
-    static let createTitle = "Создать список"
-    static let editTitle = "Редактировать список"
-    static let placeholder = "Введите название списка"
-    static let createButton = "Создать"
-    static let saveButton = "Сохранить"
+    static let createTitle: LocalizedStringResource = "Создать список"
+    static let editTitle: LocalizedStringResource = "Редактировать список"
+    static let placeholder: LocalizedStringResource = "Введите название списка"
+    static let createButton: LocalizedStringResource = "Создать"
+    static let saveButton: LocalizedStringResource = "Сохранить"
 }
 
 struct CreateEditListView: View {
-
-    var existingList: ListItem?
-
-    @Environment(\.modelContext) var modelContext
+    @Environment(\.modelContext) private var modelContext
     @Environment(NavigationRoute.self) private var router
-
+    
     @State private var insertString: String = ""
     @State private var selectedColor: ColorOption?
     @State private var selectedIcon: PickerIcon?
-
+    
+    private var existingList: ListItem?
+    
+    private var isEditMode: Bool {
+        existingList != nil
+    }
+    
     init(
         existingList: ListItem? = nil,
         initialString: String = "",
@@ -38,11 +41,7 @@ struct CreateEditListView: View {
         _selectedColor = State(initialValue: initialColor)
         _selectedIcon = State(initialValue: initialIcon)
     }
-
-    private var isEditMode: Bool {
-        existingList != nil
-    }
-
+    
     var body: some View {
         VStack(spacing: 0) {
             ScrollView {
@@ -50,75 +49,78 @@ struct CreateEditListView: View {
                     InsertTextField(
                         insertString: $insertString,
                         isError: false,
-                        placeholder: TextConstants.placeholder,
+                        placeholder: String(localized: TextConstants.placeholder),
                         subtitle: ""
                     )
                     .padding(.horizontal, 16)
-
+                    
                     ColorSelector(
                         selectedColor: $selectedColor,
-                        colorSectionText: isEditMode
-                            ? ColorSectionText.edit.rawValue
-                            : ColorSectionText.create.rawValue
+                        colorSectionText: String(localized: isEditMode
+                        ? ColorSectionText.edit.title
+                        : ColorSectionText.create.title)
                     )
                     .clipShape(
                         RoundedRectangle(cornerRadius: 12)
                     )
                     .padding(.horizontal, 16)
-
+                    
                     IconPickerView(
                         selectedIcon: $selectedIcon,
                         selectionColor: selectedColor?.color
-                            ?? ColorOption.blue.color
+                        ?? ColorOption.blue.color
                     )
                     .padding(.horizontal, 16)
                 }
             }
-
+            
             BaseButton(
                 title: isEditMode
-                    ? TextConstants.saveButton
-                    : TextConstants.createButton,
+                ? String(localized: TextConstants.saveButton)
+                : String(localized: TextConstants.createButton),
                 isActive: !insertString
                     .trimmingCharacters(
                         in: .whitespacesAndNewlines
                     )
                     .isEmpty
-                    && selectedIcon != nil
-                    && selectedColor != nil
+                && selectedIcon != nil
+                && selectedColor != nil
             ) {
-                guard let selectedColor,
-                      let selectedIcon else {
-                    return
-                }
-
-                if isEditMode {
-                    existingList?.name = insertString
-                    existingList?.color = selectedColor
-                    existingList?.icon = selectedIcon
-                } else {
-                    let newList = ListItem(
-                        name: insertString,
-                        color: selectedColor,
-                        icon: selectedIcon,
-                        items: [],
-                        totalAmount: 0
-                    )
-
-                    modelContext.insert(newList)
-                }
-
-                router.pop()
+                save()
             }
             .padding(.bottom, 20)
         }
         .navigationTitle(
             isEditMode
-                ? TextConstants.editTitle
-                : TextConstants.createTitle
+            ? TextConstants.editTitle
+            : TextConstants.createTitle
         )
         .navigationBarTitleDisplayMode(.inline)
         .background(Color.Colors.backgroundMain)
+    }
+    
+    private func save() {
+        guard let selectedColor,
+              let selectedIcon else {
+            return
+        }
+
+        if isEditMode {
+            existingList?.name = insertString
+            existingList?.color = selectedColor
+            existingList?.icon = selectedIcon
+        } else {
+            let newList = ListItem(
+                name: insertString,
+                color: selectedColor,
+                icon: selectedIcon,
+                items: []
+            )
+
+            modelContext.insert(newList)
+        }
+
+        router.pop()
     }
 }
 

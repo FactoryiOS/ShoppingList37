@@ -6,9 +6,7 @@
 import SwiftUI
 
 // MARK: - Placeholder View
-
 struct PlaceholderView: View {
-    
     let state: EmptyStateData
     
     var body: some View {
@@ -29,7 +27,6 @@ struct PlaceholderView: View {
 }
 
 // MARK: - Empty State Data
-
 enum EmptyStateData {
     case shoppingList
     case mainScreen
@@ -46,16 +43,16 @@ enum EmptyStateData {
     var title: String {
         switch self {
         case .shoppingList, .mainScreen:
-            return "Давайте спланируем покупки!"
+            return String(localized: "Давайте спланируем покупки!")
         }
     }
         
     var subtitle: String {
         switch self {
         case .shoppingList:
-            return "Начните добавлять товары"
+            return String(localized: "Начните добавлять товары")
         case .mainScreen:
-            return "Создайте свой первый список"
+            return String(localized: "Создайте свой первый список")
         }
     }
         
