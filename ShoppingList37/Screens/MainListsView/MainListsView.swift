@@ -4,6 +4,7 @@
 //
 //  Created by Kristina Kostenko on 26.08.26.
 //
+
 import SwiftUI
 import SwiftData
 
@@ -50,7 +51,7 @@ struct MainListsView: View {
                 }
             } label: {
                 Label(
-                    "Установить тему",
+                    String(localized: "Установить тему"),
                     systemImage: themeIcon
                 )
             }
@@ -59,7 +60,7 @@ struct MainListsView: View {
                 sortList()
             } label: {
                 Label {
-                    Text("Сортировка по Алфавиту")
+                    Text( String(localized: "Сортировка по Алфавиту"))
                 } icon: {
                     Image(system: .upAndDown)
                 }
@@ -75,7 +76,7 @@ struct MainListsView: View {
     var body: some View {
         VStack(spacing: 0) {
             HStack {
-                Text("Мои списки")
+                Text( String(localized: "Мои списки") )
                     .font(.title1)
                     .lineLimit(1)
                 
@@ -114,6 +115,7 @@ struct MainListsView: View {
                                     allowsFullSwipe: false
                                 ) {
                                     Button(role: .destructive) {
+                                        listToDelete = list
                                     } label: {
                                         Image(systemName: "trash")
                                     }
@@ -157,7 +159,7 @@ struct MainListsView: View {
         .background(Color.Colors.backgroundMain)
         .toolbar(.hidden, for: .navigationBar)
         .alert(
-            "Удаление списка",
+            String(localized: "Удаление списка"),
             isPresented: Binding(
                 get: {
                     listToDelete != nil
@@ -177,11 +179,11 @@ struct MainListsView: View {
                 listToDelete = nil
             }
             
-            Button("Отменить", role: .cancel) {
+            Button( String(localized: "Отменить"), role: .cancel) {
                 listToDelete = nil
             }
         } message: {
-            Text("Вы действительно хотите удалить список?")
+            Text( String(localized: "Вы действительно хотите удалить список?") )
         }
     }
     
@@ -190,6 +192,7 @@ struct MainListsView: View {
 
     private func delete(_ list: ListItem) {
         modelContext.delete(list)
+        saveContext()
     }
     
     private func duplicate(_ list: ListItem) {
@@ -207,6 +210,15 @@ struct MainListsView: View {
         )
         
         modelContext.insert(copy)
+        saveContext()
+    }
+    
+    private func saveContext() {
+        do {
+            try modelContext.save()
+        } catch {
+            assertionFailure("Failed to operation on database: \(error)")
+        }
     }
 }
 
