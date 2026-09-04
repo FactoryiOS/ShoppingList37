@@ -10,6 +10,7 @@ import SwiftData
 
 struct ItemsListView: View {
     @State private var searchText = ""
+    @State private var showAlertDeleteAll: Bool = false
     @State private var itemToDelete: ShoppingItem?
     
     @Environment(\.modelContext) private var modelContext
@@ -27,6 +28,50 @@ struct ItemsListView: View {
         }
     }
     
+    private var navigationMenu: some View {
+        Menu {
+            Button {
+                sortItems()
+            } label: {
+                Label {
+                    Text( String(localized: "Сортировка по Алфавиту") )
+                } icon: {
+                    Image(system: .upAndDown)
+                }
+            }
+            
+            ShareLink(item: shareText) {
+                Label {
+                    Text( String(localized: "Поделиться") )
+                } icon: {
+                    Image(systemName: "square.and.arrow.up")
+                }
+            }
+            
+            Button {
+                uncheckAllItems()
+            } label: {
+                Label {
+                    Text( String(localized: "Снять отметки со всех товаров") )
+                } icon: {
+                    Image(systemName: "arrow.triangle.2.circlepath")
+                }
+            }
+            
+            Button(role: .destructive) {
+                showAlertDeleteAll = true
+            } label: {
+                Label {
+                    Text( String(localized: "Удалить купленные товары") )
+                } icon: {
+                    Image(systemName: "trash")
+                }
+            }
+        } label: {
+            Image(systemName: "ellipsis.circle")
+        }
+    }
+
     var body: some View {
         VStack(spacing: 0) {
             List {
@@ -45,10 +90,7 @@ struct ItemsListView: View {
                             Button(role: .destructive) {
                                 itemToDelete = item
                             } label: {
-                                Label(
-                                    "",
-                                    systemImage: "trash"
-                                )
+                                Image(systemName: "trash")
                             }
                             
                             Button {
@@ -79,9 +121,14 @@ struct ItemsListView: View {
                 placement: .navigationBarDrawer(
                     displayMode: .always
                 ),
-                prompt: "Поиск"
+                prompt: String(localized: "Поиск")
             )
-            
+            .toolbar {
+                ToolbarItem(placement: .topBarTrailing) {
+                    navigationMenu
+                }
+            }
+
             BaseButton(
                 title: String(localized: "Добавить товар")
             ) {
@@ -96,7 +143,7 @@ struct ItemsListView: View {
         .navigationBarTitleDisplayMode(.inline)
         .toolbarRole(.editor)
         .alert(
-            "Удаление товара",
+            String(localized: "Удаление товара"),
             isPresented: Binding(
                 get: {
                     itemToDelete != nil
@@ -108,7 +155,7 @@ struct ItemsListView: View {
                 }
             )
         ) {
-            Button("Удалить", role: .destructive) {
+            Button( String(localized: "Удалить"), role: .destructive) {
                 if let item = itemToDelete {
                     deleteItem(item)
                 }
@@ -116,27 +163,65 @@ struct ItemsListView: View {
                 itemToDelete = nil
             }
             
-            Button("Отменить", role: .cancel) {
+            Button( String(localized: "Отменить"), role: .cancel) {
                 itemToDelete = nil
             }
         } message: {
-            Text("Вы действительно хотите удалить товар?")
+            Text( String(localized: "Вы действительно хотите удалить товар?") )
+        }
+        .alert( String(localized: "Удаление купленных товаров"), isPresented: $showAlertDeleteAll) {
+            Button("Отменить", role: .cancel) {
+                showAlertDeleteAll = false
+            }
+            Button("Удалить", role: .destructive) {
+                showAlertDeleteAll = false
+                deletePurchased()
+            }
+        } message: {
+            Text( String(localized: "Вы действительно хотите удалить все купленные товары?") )
         }
     }
     
     private func deleteItem(_ item: ShoppingItem) {
         list.items.removeAll { $0.id == item.id }
-        modelContext.delete(item)
         
+        modelContext.delete(item)
+        saveContext()
+    }
+
+    private func sortItems() {
+    }
+    
+    var shareText: String {
+        list.items.map { item in
+            let status = item.isPurchased ? "[x]" : "[ ]"
+            return "\(status) \(item.title) — \(item.count) \(item.unit.rawValue)"
+        }.joined(separator: "\n")
+    }
+
+    private func uncheckAllItems() {
+        for item in list.items {
+            item.isPurchased = false
+        }
+        saveContext()
+    }
+    
+    private func deletePurchased() {
+        list.items.filter(\.isPurchased).forEach { modelContext.delete($0) }
+        saveContext()
+    }
+    
+    private func saveContext() {
         do {
             try modelContext.save()
         } catch {
-            assertionFailure("Failed to delete item: \(error)")
+            assertionFailure("Failed to operation on database: \(error)")
         }
     }
     
     private func togglePurchased(_ item: ShoppingItem) {
         item.isPurchased.toggle()
+        saveContext()
         
         list.items.sort {
             if $0.isPurchased != $1.isPurchased {
