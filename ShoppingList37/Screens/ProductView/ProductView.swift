@@ -114,7 +114,7 @@ struct ProductView: View {
                         Image(systemName: "checkmark")
                     }
                     
-                    Text(unit.rawValue)
+                    Text(unit.short)
                 }
             }
         } label: {
@@ -124,7 +124,7 @@ struct ProductView: View {
                 
                 Spacer()
                 
-                Text(unitOfMeasurement.rawValue)
+                Text(unitOfMeasurement.short)
                     .foregroundStyle(Color.Colors.accentPressed)
                 
                 Image(systemName: "chevron.up.chevron.down")
@@ -186,9 +186,9 @@ struct ProductView: View {
                         InsertTextField(
                             insertString: $productName,
                             isError: isDuplicateProduct,
-                            placeholder: "Название товара",
+                            placeholder: String(localized: "Название товара"),
                             subtitle: isDuplicateProduct
-                                    ? "Этот товар уже есть в списке, добавьте другой"
+                                    ? String(localized: "Этот товар уже есть в списке, добавьте другой")
                                     : ""
                         )
                         .onChange(of: productName) {
@@ -204,7 +204,7 @@ struct ProductView: View {
                             InsertTextField(
                                 insertString: $productCount,
                                 isError: false,
-                                placeholder: "Количество",
+                                placeholder: String(localized: "Количество"),
                                 subtitle: ""
                             )
                             .onChange(
@@ -251,7 +251,7 @@ struct ProductView: View {
         }
     }
     
-    private var title: String {
+    private var title: LocalizedStringResource {
         switch mode {
         case .create:
             return "Создание товара"

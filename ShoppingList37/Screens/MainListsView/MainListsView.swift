@@ -138,7 +138,7 @@ struct MainListsView: View {
             Spacer()
             
             BaseButton(
-                title: "Создать список",
+                title: String(localized: "Создать список"),
                 isActive: true
             ) {
                 router.push(.createList)
@@ -182,7 +182,7 @@ struct MainListsView: View {
     
     private func duplicate(_ list: ListItem) {
         let copy = ListItem(
-            name: "\(list.name) (Копия)",
+            name: String(localized: "\(list.name) (Копия)"),
             color: list.color,
             icon: list.icon,
             items: list.items.map {

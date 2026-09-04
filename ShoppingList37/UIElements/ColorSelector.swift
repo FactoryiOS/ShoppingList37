@@ -8,8 +8,15 @@
 import SwiftUI
 
 enum ColorSectionText: String {
-    case create = "Выберите цвет"
-    case edit = "Цвет"
+    case create
+    case edit
+    
+    var title: LocalizedStringResource {
+        switch self {
+        case .create: return "Выберите цвет"
+        case .edit: return "Цвет"
+        }
+    }
 }
 
 struct ColorSelector: View {

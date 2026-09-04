@@ -15,11 +15,11 @@ enum AppScheme: String, CaseIterable {
     var title: String {
         switch self {
         case .light:
-            return "Светлая"
+            return String(localized: "Светлая")
         case .dark:
-            return "Тёмная"
+            return String(localized: "Тёмная")
         case .system:
-            return "Системная"
+            return String(localized: "Системная")
         }
     }
     
